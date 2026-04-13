@@ -1,0 +1,1077 @@
+/* =========================================================
+   FCO - CLIENT + ADMIN APP (FULL SOURCE v21.0 - MERGED & CLEANED)
+   Dark mode + Inkfire glass system (Calm, Premium, Consistent)
+   ========================================================= */
+
+/* =========================================================
+   BASE APP WRAPPER
+   ========================================================= */
+
+#fco-client-app {
+  font-family: "Atkinson Hyperlegible Next", "Atkinson Hyperlegible", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+  width: 100%;
+  min-height: 100vh;
+  border-radius: 35px;
+  position: relative;
+  line-height: 1.2;
+  color: #F2F2F2;
+  background:
+    radial-gradient(110% 130% at 100% 0%, rgba(219,88,68,0.10) 0%, transparent 75%),
+    radial-gradient(circle at 0% 0%, rgba(7,160,121,0.08), transparent 62%),
+    radial-gradient(circle at 100% 0%, rgba(14,91,78,0.10), transparent 58%),
+    #151622;
+}
+
+#fco-client-app * { box-sizing: border-box; }
+
+#fco-client-app button {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  cursor: pointer;
+  box-shadow: none;
+  text-shadow: none;
+}
+
+/* =========================================================
+   TOKENS (INKFIRE DARK)
+   ========================================================= */
+
+#fco-client-app {
+  --bg-0: #151622;
+  --bg-1: #1C1D2D;
+
+  --txt: #F2F2F2;
+  --txt-soft: rgba(242,242,242,0.78);
+  --txt-mute: rgba(242,242,242,0.58);
+
+  --line: rgba(255,255,255,0.14);
+  --line-soft: rgba(255,255,255,0.10);
+
+  --glass: rgba(255,255,255,0.06);
+  --glass-2: rgba(255,255,255,0.08);
+
+  --accent-pink: #DF157C;
+  --accent-teal: #32B190;
+  --accent-ochre: rgba(226,114,0,1);
+
+  --glow-teal: rgba(7,160,121,0.18);
+  --glow-pine: rgba(14,91,78,0.14);
+  --glow-almond: rgba(251,204,191,0.14);
+  --glow-ochre: rgba(226,114,0,0.12);
+
+  --focus: rgba(223,21,124,0.65);
+}
+
+/* Reusable glass surface */
+#fco-client-app .fco-glass {
+  background:
+    radial-gradient(circle at 0% 0%, var(--glow-almond), transparent 62%),
+    radial-gradient(circle at 100% 0%, var(--glow-pine), transparent 58%),
+    radial-gradient(115% 140% at 50% 115%, rgba(255,255,255,0.05), transparent 70%),
+    var(--glass);
+
+  border: 1px solid var(--line-soft);
+  box-shadow:
+    inset 0 0 14px rgba(0,0,0,0.35),
+    inset 0 1px 0 rgba(255,255,255,0.10),
+    inset 0 -1px 0 rgba(0,0,0,0.45),
+    0 12px 28px rgba(0,0,0,0.35);
+}
+
+/* =========================================================
+   ADMIN LAYOUT FORCE
+   ========================================================= */
+
+body.fco-admin-screen #post-body.columns-2 #postbox-container-1 {
+  display: none !important;
+}
+body.fco-admin-screen #post-body.columns-2 #post-body-content {
+  margin-right: 0 !important;
+  width: 100% !important;
+}
+body.fco-admin-screen #wpcontent { padding-left: 0; }
+body.fco-admin-screen .wrap {
+  margin: 10px 20px 0 20px;
+  max-width: none;
+}
+
+body.fco-admin-screen #fco-admin-wrapper,
+body.fco-admin-screen #fco-client-app {
+  height: 90vh !important;
+  width: 100% !important;
+  min-height: 0 !important;
+  padding: 0 !important;
+  border-radius: 35px !important;
+  box-shadow: none !important;
+  background: #13141F !important;
+}
+
+body.fco-admin-screen #fco-client-app .fco-portal-wrap {
+  height: 100% !important;
+  min-height: 0 !important;
+  width: 100% !important;
+  max-width: none !important;
+  margin: 0 !important;
+  border-radius: 35px !important;
+  border: 1px solid var(--line-soft) !important;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.25) !important;
+  overflow: hidden;
+}
+
+body.fco-admin-screen #fco-client-app.mode-wizard {
+  background: transparent !important;
+  border: none;
+}
+
+/* =========================================================
+   BUTTONS
+   ========================================================= */
+
+#fco-client-app .fco-btn {
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-weight: 800;
+  font-size: 0.95rem;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.3s ease, border-color 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(255,255,255,0.16);
+  text-decoration: none;
+  gap: 10px;
+  line-height: 1;
+  white-space: nowrap;
+  cursor: pointer;
+  color: var(--txt);
+}
+
+#fco-client-app .fco-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 4px rgba(223,21,124,0.18);
+  border-color: rgba(223,21,124,0.55);
+}
+
+#fco-client-app .fco-btn.primary {
+  color: #fff;
+  background: transparent;
+  border: 2px rgba(255,255,255,0.85) solid;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.28);
+}
+
+#fco-client-app .fco-btn.primary:hover {
+  transform: translateY(-1px);
+  background: rgba(255,255,255,0.06);
+  border-color: rgba(255,255,255,0.85);
+}
+
+#fco-client-app .fco-btn.ghost {
+  background: rgba(255,255,255,0.10);
+  color: var(--txt);
+  border-color: rgba(255,255,255,0.16);
+}
+
+#fco-client-app .fco-btn.ghost:hover {
+  transform: translateY(-1px);
+  background: rgba(255,255,255,0.14);
+  border-color: rgba(255,255,255,0.22);
+}
+
+#fco-client-app .fco-btn.small { padding: 8px 14px; font-size: 0.86rem; }
+#fco-client-app .fco-btn.large { padding: 14px 26px; font-size: 1.05rem; }
+#fco-client-app .fco-btn.full { width: 100%; }
+
+#fco-client-app .fco-btn[disabled] {
+  opacity: 0.55;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* =========================================================
+   INPUTS (GLOBAL)
+   ========================================================= */
+
+#fco-client-app .fco-input,
+#fco-client-app .fco-select {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  font-size: 1rem;
+  background: rgba(255,255,255,0.06);
+  color: var(--txt);
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+  margin-bottom:7px;
+}
+
+#fco-client-app .fco-input::placeholder,
+#fco-client-app .fco-select::placeholder {
+  color: rgba(242,242,242,0.55);
+  opacity: 1;
+}
+
+#fco-client-app .fco-input:focus,
+#fco-client-app .fco-select:focus {
+  border-color: rgba(223,21,124,0.55);
+  box-shadow: 0 0 0 4px rgba(223,21,124,0.18);
+  background: rgba(255,255,255,0.08);
+}
+
+#fco-client-app .fco-label {
+  font-weight: 700;
+  font-size: 0.95rem;
+  margin: 8px 15px 15px 15px;
+  display: block;
+  color: var(--txt-soft);
+}
+
+#fco-client-app .fco-file-inline input[type="file"] { display: none; }
+
+/* =========================================================
+   MODE: START SCREEN
+   ========================================================= */
+
+#fco-client-app.mode-start {
+  background: linear-gradient(110deg, #2b6cb0 0%, #DF157C 50%, #F4C946 100%);
+  padding: 50px;
+  border-radius: 35px;
+  box-shadow: 0 18px 45px rgba(2, 6, 23, 0.55);
+  color: #fff;
+  min-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+#fco-client-app .fco-start-hero { max-width: 980px; width: 100%; }
+#fco-client-app .fco-start-kicker { font-size: 1rem; letter-spacing: 0.08em; text-transform: uppercase; font-weight: 800; opacity: 0.92; margin-bottom: 16px; }
+#fco-client-app .fco-start-title { font-size: clamp(2.5rem, 5vw, 4rem); line-height: 1.1; font-weight: 950; margin: 0 0 24px 0; text-shadow: 0 2px 10px rgba(0,0,0,0.22); }
+#fco-client-app .fco-start-sub { font-size: 1.15rem; line-height: 1.6; max-width: 780px; margin: 0 auto 32px auto; opacity: 0.95; }
+#fco-client-app .fco-start-actions { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+
+/* =========================================================
+   LAYOUT SHELL (EDITOR)
+   ========================================================= */
+
+#fco-client-app .fco-portal-wrap {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow: hidden;
+  border-radius: 35px;
+  box-shadow: 0 18px 45px rgba(0,0,0,0.35);
+  border: 1px solid var(--line-soft);
+  background:
+    radial-gradient(circle at 0% 0%, rgba(251,204,191,0.18), transparent 62%),
+    radial-gradient(circle at 100% 0%, rgba(30,97,103,0.26), transparent 58%),
+    radial-gradient(115% 140% at 50% 115%, rgba(255,255,255,0.04), transparent 70%),
+    #1C1D2D;
+}
+
+#fco-client-app .fco-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 24px 32px;
+  flex: 0 0 auto;
+  border-bottom: 1px solid var(--line);
+  background: transparent;
+}
+
+#fco-client-app .fco-head-left,
+#fco-client-app .fco-head-right { display: flex; align-items: center; gap: 12px; }
+
+#fco-client-app .fco-head-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+  flex-direction: row-reverse;
+  position: relative;
+}
+
+#fco-client-app .fco-head-titles { display: flex; flex-direction: column; line-height: 1.2; }
+#fco-client-app .fco-head-title { font-size: 1.1rem; font-weight: 900; color: var(--txt); }
+#fco-client-app .fco-head-sub { font-size: 0.85rem; color: var(--txt-mute); margin-top: 0; }
+
+#fco-client-app .fco-logo-mark { width: 40px; height: 40px; }
+
+#fco-client-app .fco-save-indicator {
+  font-size: 0.85rem;
+  color: var(--txt-mute);
+  padding: 6px 14px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.06);
+  font-weight: 800;
+  white-space: nowrap;
+}
+#fco-client-app .fco-save-indicator.is-saving { color: rgba(242,242,242,0.85); border-color: rgba(255,255,255,0.18); }
+#fco-client-app .fco-save-indicator.is-error {
+  color: #fff;
+  border-color: rgba(206,61,39,0.55);
+  background: rgba(206,61,39,0.18);
+}
+
+/* =========================================================
+   TABS
+   ========================================================= */
+
+#fco-client-app .fco-toolbar {
+  background: transparent;
+  padding: 25px 0 0 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  flex: 0 0 auto;
+  overflow: hidden;
+  margin-bottom: -1px;
+  z-index: 2;
+  border-bottom: 1px solid var(--line);
+}
+
+#fco-client-app .fco-tab-nav {
+  display: flex;
+  position: relative;
+  z-index: 1;
+  padding-left: 10px;
+}
+
+#fco-client-app .fco-tab-btn {
+  position: relative;
+  padding: 10px 40px !important;
+  border: none !important;
+  background: transparent !important;
+  font-weight: 800 !important;
+  font-size: 1.1rem !important;
+  color: var(--txt-mute);
+  cursor: pointer !important;
+  margin-right: 5px !important;
+  z-index: 1;
+  transition: color 0.2s;
+}
+
+#fco-client-app .fco-tab-btn::before {
+  content: '';
+  position: absolute;
+  top: 0; right: 0; bottom: 0; left: 0;
+  z-index: -1;
+  background: rgba(255,255,255,0.06);
+  transform: scaleY(1.3) perspective(100px) rotateX(20deg);
+  transform-origin: bottom center;
+  border-radius: 10px 10px 0 0;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-bottom: none;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08);
+  transition: background 0.2s, z-index 0s, border-color 0.2s;
+}
+
+#fco-client-app .fco-tab-btn:hover { color: var(--txt); z-index: 2; }
+#fco-client-app .fco-tab-btn:hover::before { background: rgba(255,255,255,0.08); border-color: rgba(255,255,255,0.12); }
+
+/* Active tab uses orange accent */
+#fco-client-app .fco-tab-btn.active { color: #EC853D; z-index: 3; }
+#fco-client-app .fco-tab-btn.active::before {
+  background: rgba(255,255,255,0.09);
+  box-shadow: none;
+  border-bottom: 1px solid rgba(255,255,255,0.09);
+  margin-bottom: -1px;
+}
+
+/* =========================================================
+   DASHBOARD GRID & SCROLL
+   ========================================================= */
+
+#fco-client-app .fco-stage { flex: 1; min-height: 0; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+#fco-client-app .fco-grid { display: grid; grid-template-columns: 320px 1fr 340px; flex: 1; min-height: 0; overflow: hidden; }
+
+#fco-client-app .fco-dash-scroller {
+  flex: 1;
+  overflow-y: auto;
+  background: transparent;
+  padding: 35px;
+  position: relative;
+  z-index: 5;
+  border-top: 1px solid var(--line);
+}
+
+#fco-client-app .fco-dash-container {
+  max-width: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+#fco-client-app .fco-dash-container h2 { font-size: 1.4rem; font-weight: 900; color: var(--txt); margin: 0 0 10px 0; }
+#fco-client-app .fco-dash-container h3 { font-size: 1.1rem; font-weight: 800; color: var(--txt-soft); margin: 0 0 10px 0; }
+
+#fco-client-app .fco-card {
+  background:
+    radial-gradient(circle at 0% 0%, rgba(251,204,191,0.10), transparent 62%),
+    radial-gradient(circle at 100% 0%, rgba(14,91,78,0.10), transparent 58%),
+    rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow:
+    inset 0 0 14px rgba(0,0,0,0.35),
+    0 10px 22px rgba(0,0,0,0.28);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* =========================================================
+   DASHBOARD IMAGE PREVIEWS & THUMBNAILS (HOTFIX MERGED)
+   ========================================================= */
+
+#fco-client-app .fco-dash-scroller .fco-card img {
+  display: block;
+  max-width: 100%;
+  width: auto;
+  height: 100px;
+  max-height: 140px;
+  object-fit: contain;
+  border-radius: 16px;
+  background: #ffffff;
+  flex: 0 0 auto;
+}
+
+#fco-client-app .staff-thumb,
+#fco-client-app .staff-thumb-wrap {
+  width: 60px !important;
+  height: 60px !important;
+  flex: 0 0 60px !important;
+  border-radius: 999px !important;
+  overflow: hidden !important;
+  box-shadow: 0 10px 22px rgba(0,0,0,0.28);
+}
+
+#fco-client-app .staff-thumb img,
+#fco-client-app .staff-thumb-wrap img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  display: block !important;
+}
+
+/* =========================================================
+   TEAM MEMBER ROW LAYOUT (DASHBOARD)
+   ========================================================= */
+
+#fco-client-app #dash-staff-list .fco-typo-row {
+  display: grid !important;
+  grid-template-columns: 72px 1fr !important;
+  gap: 14px !important;
+  align-items: start !important;
+}
+
+#fco-client-app #dash-staff-list .staff-thumb-wrap {
+  justify-self: start !important;
+  align-self: start !important;
+  margin-top: 4px;
+}
+
+#fco-client-app #dash-staff-list .fco-typo-row > * { min-width: 0; }
+
+/* =========================================================
+   SIDEBAR (PAGES TAB)
+   ========================================================= */
+
+#fco-client-app .fco-sidebar {
+  background: transparent;
+  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+#fco-client-app .fco-tree-controls {
+  padding: 16px;
+    display: flex;
+    background: transparent;
+    border-bottom: 1px solid var(--line);
+    flex-direction: column;
+    gap: 15px;
+}
+
+#fco-client-app .fco-nav-header {
+  padding: 16px 16px 8px;
+  font-size: 0.75rem;
+  font-weight: 900;
+  color: rgba(242,242,242,0.85);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+#fco-client-app .fco-tree-list {
+  list-style: none;
+  margin: 0;
+  padding: 10px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+#fco-client-app .fco-node {
+  display: block;
+  margin-bottom: 4px;
+  border-radius: 8px;
+  border: 1px solid transparent;
+  background: transparent;
+  transition: background 0.1s, border-color 0.1s;
+}
+
+#fco-client-app .fco-node.active {
+  background: rgba(255,255,255,0.07);
+  border-color: rgba(255,255,255,0.12);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.12);
+}
+
+#fco-client-app .fco-node-inner {
+  display: grid;
+  grid-template-columns: 24px 1fr auto auto;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  min-height: 40px;
+}
+
+#fco-client-app .fco-drag { cursor: grab; color: rgba(242,242,242,0.85); font-weight: 900; user-select: none; }
+#fco-client-app .fco-node:hover .fco-drag { color: rgba(242,242,242,0.95); }
+
+#fco-client-app .fco-node-title {
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: var(--txt-soft);
+  outline: none;
+  border-radius: 4px;
+  padding: 2px 6px;
+  white-space: nowrap;
+  overflow: visible !important;
+  text-overflow: unset !important;
+  min-width: 0;
+}
+#fco-client-app .fco-node-title:focus { background: rgba(255,255,255,0.08); color: var(--txt); box-shadow: 0 0 0 2px rgba(223,21,124,0.45); }
+#fco-client-app .fco-node[data-level="0"] .fco-node-title { font-weight: 850; color: var(--txt); }
+#fco-client-app .fco-node.active .fco-node-title { color: #FBCCBF; }
+
+#fco-client-app .fco-node-chip {
+  font-size: 0.7rem;
+  font-weight: 850;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.06);
+  color: rgba(242,242,242,0.55);
+  text-transform: uppercase;
+}
+#fco-client-app .fco-node[data-status="draft"] .fco-node-chip { background: rgba(7,160,121,0.14); border-color: rgba(7,160,121,0.22); color: rgba(242,242,242,0.82); }
+#fco-client-app .fco-node[data-status="review"] .fco-node-chip { background: rgba(226,114,0,0.14); border-color: rgba(226,114,0,0.22); color: rgba(242,242,242,0.86); }
+#fco-client-app .fco-node[data-status="approved"] .fco-node-chip { background: rgba(14,91,78,0.18); border-color: rgba(14,91,78,0.28); color: rgba(242,242,242,0.86); }
+
+#fco-client-app .fco-node-actions { display: flex; gap: 4px; align-items: center; opacity: 0; pointer-events: none; }
+#fco-client-app .fco-node:hover .fco-node-actions,
+#fco-client-app .fco-node:focus-within .fco-node-actions { opacity: 1; pointer-events: auto; }
+
+#fco-client-app .fco-mini {
+  width: 24px; height: 24px; border-radius: 6px;
+  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255,255,255,0.06);
+  color: #FBCCBF;
+  display: grid; place-items: center;
+  font-weight: 900 !important; font-size: 1rem !important;
+  cursor: pointer;
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+}
+#fco-client-app .fco-mini:hover { background: rgba(255,255,255,0.09); color: var(--txt) !important; border-color: rgba(255,255,255,0.20); }
+#fco-client-app .fco-mini.danger:hover { background: rgba(206,61,39,0.20); color: #fff !important; border-color: rgba(206,61,39,0.45); }
+
+#fco-client-app .fco-sort-placeholder {
+  height: 40px; border-radius: 8px; border: 2px dashed rgba(242,242,242,0.35); background: rgba(255,255,255,0.05); margin-bottom: 4px;
+}
+
+/* =========================================================
+   EDITOR AREA
+   ========================================================= */
+
+#fco-client-app .fco-editor { background: transparent; overflow-y: auto; padding: 40px; border-left: 1px solid var(--line); }
+
+#fco-client-app .fco-editor-header {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; margin-bottom: 24px; padding-bottom: 20px; border-bottom: 1px solid var(--line);
+}
+#fco-client-app .fco-editor-header h1 { margin: 0; font-size: 2rem; font-weight: 950; color: var(--txt); letter-spacing: -0.02em; }
+
+#fco-client-app .fco-field-grid { display: grid; grid-template-columns: 1fr; gap: 20px; margin-bottom: 24px; }
+#fco-client-app .fco-field-group { display: flex; flex-direction: column; }
+
+#fco-client-app .fco-rich-wp {
+  border: 1px solid rgba(255,255,255,0.10); border-radius: 12px; padding: 16px;
+  background: rgba(255,255,255,0.06); box-shadow: 0 10px 22px rgba(0,0,0,0.28);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+}
+
+/* TinyMCE Overrides */
+#fco-client-app .wp-editor-tools { border-radius: 8px; overflow: hidden; background: #ffffff; padding: 10px; }
+#fco-client-app .fco-rich-wp .wp-editor-wrap { border-radius: 8px; overflow: hidden; background: #ffffff; padding: 10px; }
+#fco-client-app .fco-rich-wp .mce-top-part::before { box-shadow: none !important; }
+#fco-client-app .fco-rich-wp .wp-editor-container { border: 1px solid rgba(255,255,255,0.10) !important; }
+#fco-client-app .fco-rich-wp .wp-switch-editor { color: #fff; border-radius: 4px !important; }
+
+#fco-client-app .fco-empty {
+  border: 1px dashed rgba(255,255,255,0.18); border-radius: 18px; padding: 60px 20px;
+  text-align: center; background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+}
+#fco-client-app .fco-empty-title { font-weight: 950; font-size: 1.2rem; color: var(--txt); }
+#fco-client-app .fco-empty-sub { margin-top: 8px; color: var(--txt-mute); }
+
+/* =========================================================
+   ASIDE (RIGHT PANEL)
+   ========================================================= */
+
+#fco-client-app .fco-aside { background: transparent; border-left: 1px solid var(--line); padding: 24px; overflow-y: auto; }
+
+#fco-client-app .fco-panel { margin-bottom: 32px; }
+#fco-client-app .fco-panel h4 { margin: 0 0 12px 0; font-size: 0.75rem; text-transform: uppercase; color: #fff; letter-spacing: 0.05em; font-weight: 950; }
+#fco-client-app .fco-empty-msg { font-size: 0.9rem; color: var(--txt-mute); padding: 10px; text-align: center; font-style: italic; }
+
+/* =========================================================
+   WIZARD (MODERN, ACCESSIBLE, LOCKED SIZE)
+   ========================================================= */
+
+#fco-client-app.mode-wizard { background: transparent; width: 100%; height: 100%; min-height: 100vh; padding: 0; }
+#fco-client-app .fco-wizard-stage { width: 100%; height: 100%; min-height: 100vh; }
+body.fco-admin-screen #fco-client-app .fco-wizard-stage { min-height: 0; height: 100%; }
+
+#fco-client-app .fco-wizard-card {
+  width: 100%; height: 90vh; max-height: 90vh;
+  border-radius: 24px !important; overflow: hidden;
+  display: flex; flex-direction: column;
+  box-shadow: 0 25px 50px -12px rgba(0,0,0,0.55);
+  border: 1px solid rgba(255,255,255,0.12);
+  background:
+    radial-gradient(circle at 0% 0%, rgba(251,204,191,0.12), transparent 62%),
+    radial-gradient(circle at 100% 0%, rgba(7,160,121,0.10), transparent 60%),
+    radial-gradient(115% 140% at 50% 115%, rgba(255,255,255,0.05), transparent 70%),
+    rgba(255,255,255,0.05);
+  backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+}
+body:not(.fco-admin-screen) #fco-client-app .fco-wizard-card { border-radius: 0; }
+
+#fco-client-app .fco-wizard-topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 24px 40px; gap: 16px; flex-shrink: 0;
+  border-bottom: 1px solid var(--line); background: transparent;
+}
+
+#fco-client-app .fco-wizard-brand { display: flex; gap: 12px; align-items: center; }
+#fco-client-app .fco-wizard-title { font-weight: 950; font-size: 1.2rem; color: var(--txt); }
+#fco-client-app .fco-wizard-sub { font-size: 0.9rem; color: var(--txt-mute); margin-top: 0; }
+#fco-client-app .fco-wizard-brandtext { display: flex; flex-direction: column; }
+
+#fco-client-app .fco-wizard-progress { height: 6px; background: rgba(255,255,255,0.08); width: 100%; overflow: hidden; flex-shrink: 0; }
+#fco-client-app .fco-wizard-progress .fill { height: 100%; width: 0%; background: #FBCCBF; transition: width 0.4s ease; }
+
+#fco-client-app .fco-wizard-body {
+  flex: 1; display: flex; flex-direction: column;
+  padding: 40px; gap: 0; align-items: center; justify-content: flex-start;
+  text-align: center; overflow-y: auto; width: 100%;
+}
+#fco-client-app .fco-wizard-body::before,
+#fco-client-app .fco-wizard-body::after { content: ''; display: block; flex-grow: 1; min-height: 20px; }
+
+#fco-client-app .fco-wizard-stepmeta {
+  display: flex; gap: 12px; align-items: baseline;
+  color: var(--txt-mute); font-weight: 900; letter-spacing: 0.05em; text-transform: uppercase; font-size: 0.85rem;
+}
+#fco-client-app .fco-wizard-question {
+  margin-top: 10px; font-size: clamp(1.6rem, 3vw, 2.8rem); font-weight: 950;
+  line-height: 1.2; color: var(--txt); max-width: 800px;
+}
+#fco-client-app .fco-wiz-hint,
+#fco-client-app .fco-wizard-card .fco-wiz-hint,
+#fco-client-app .fco-wizard-card .fco-wiz-footnote,
+#fco-client-app .fco-wizard-card .fco-wiz-helper,
+#fco-client-app .fco-wizard-card .fco-field-help,
+#fco-client-app .fco-wizard-card .fco-help,
+#fco-client-app .fco-wizard-card small { 
+  color: var(--txt-soft); font-size: 1rem; line-height: 1.6; margin-top: 0px; max-width: 600px;
+  text-align: center !important; margin-left: auto !important; margin-right: auto !important;
+}
+
+/* Wizard Input Area */
+#fco-client-app .fco-wizard-input { 
+  margin-top: 35px; width: 100%; max-width: 980px !important; 
+  display: flex; flex-direction: column; align-items: center; 
+  padding: 0 20px !important; overflow: visible; 
+}
+#fco-client-app .fco-wiz-fieldrow { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; justify-content: center; width: 100%; }
+
+/* Wizard Modern Input */
+#fco-client-app .fco-wiz-field {
+  width: 100%; max-width: 100%;
+  background: rgba(255,255,255,0.06); border: 1px solid var(--line);
+  border-radius: 14px; padding: 14px 16px;
+  font-size: 1.15rem; font-weight: 750; color: var(--txt);
+  text-align: center; outline: none;
+  transition: border-color 0.3s ease, transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  caret-color: #FBCCBF; line-height: 1.3;
+}
+#fco-client-app .fco-wiz-field::placeholder { color: rgba(242,242,242,0.55); font-weight: 650; opacity: 1; }
+#fco-client-app .fco-wiz-field:focus {
+  border-color: rgba(223,21,124,0.55); box-shadow: 0 0 0 4px rgba(223,21,124,0.18);
+  transform: translateY(-2px); background: rgba(255,255,255,0.08);
+}
+
+#fco-client-app textarea.fco-wiz-field { text-align: left; font-size: 1.05rem; border-radius: 16px; padding: 20px; min-height: 150px; }
+#fco-client-app textarea.fco-wiz-field:focus { transform: none; }
+
+/* Choice Buttons */
+#fco-client-app .fco-wiz-choicebar { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
+
+#fco-client-app .fco-wiz-choice {
+  padding: 8px 48px !important; border-radius: 50px !important;
+  background-color: #F5977A !important;
+  background-image: linear-gradient(135deg, rgba(226, 114, 0, 0.55) 0%, rgba(219, 88, 68, 0.60) 100%) !important;
+  border: 1px solid rgba(226, 114, 0, 0.35) !important; border-top: 1px solid rgba(255, 255, 255, 0.25) !important;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25), inset 0 0 20px rgba(226, 114, 0, 0.10);
+  backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  font-weight: 850 !important; font-size: 1.15rem !important; color: #fff !important;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+#fco-client-app .fco-wiz-choice:hover {
+  transform: translateY(-2px); border-color: rgba(255,255,255,0.22) !important;
+  box-shadow: 0 14px 28px rgba(0,0,0,0.34), inset 0 0 20px rgba(226,114,0,0.12);
+}
+#fco-client-app .fco-wiz-choice.active {
+  background-color: #F5977A !important;
+  background-image: linear-gradient(135deg, rgba(226, 114, 0, 0.78) 0%, rgba(219, 88, 68, 0.82) 100%) !important;
+  border: 1px solid rgba(255,255,255,0.28) !important;
+  box-shadow: 0 14px 28px rgba(0,0,0,0.34), 0 0 0 4px rgba(223,21,124,0.16) !important;
+}
+
+/* Wizard Footer */
+#fco-client-app .fco-wizard-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 30px 40px; border-top: 1px solid var(--line);
+  background: transparent; flex-shrink: 0;
+}
+#fco-client-app .fco-wiz-footnote { font-size: 0.9rem; color: var(--txt-mute); font-weight: 750; }
+
+/* =========================================================
+   PALETTE STUDIO
+   ========================================================= */
+
+#fco-client-app .fco-palette-stage {
+  display: flex; flex-direction: row;
+  width: 100%; max-width: 980px; min-height: 250px;
+  border-radius: 24px;
+  overflow-x: auto !important; overflow-y: visible !important; -webkit-overflow-scrolling: touch;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.38);
+  border: 1px solid rgba(255,255,255,0.10);
+  background: rgba(255,255,255,0.06);
+  margin-top: 20px; margin-left: auto; margin-right: auto;
+  padding: 10px !important; gap: 8px; box-sizing: border-box;
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+}
+#fco-client-app .fco-palette-stage::-webkit-scrollbar { height: 10px; }
+
+#fco-client-app .fco-palette-strip {
+  flex: 1; position: relative; display: flex; flex-direction: column;
+  justify-content: center; align-items: center; padding: 20px;
+  transition: flex 0.3s cubic-bezier(0.25, 1, 0.5, 1);
+  min-width: 140px; border-radius: 18px;
+  border-right: none;
+}
+#fco-client-app .fco-palette-strip + .fco-palette-strip { box-shadow: inset 1px 0 0 rgba(255,255,255,0.08); }
+
+#fco-client-app .fco-palette-strip:hover { flex: 2.5; z-index: 10 !important; box-shadow: 0 0 30px rgba(0,0,0,0.35); }
+
+#fco-client-app .fco-strip-inputs {
+  display: flex; flex-direction: column; gap: 8px; width: 100%; max-width: 180px;
+  z-index: 2; opacity: 0.92; transition: opacity 0.2s;
+}
+#fco-client-app .fco-palette-strip:hover .fco-strip-inputs { opacity: 1; }
+
+/* Strip Inputs */
+#fco-client-app input.fco-strip-input {
+  background: rgba(255,255,255,0.92) !important;
+  border: 1px solid rgba(0,0,0,0.08) !important;
+  text-align: center; font-weight: 850; color: #151622 !important;
+  -webkit-text-fill-color: #151622 !important; caret-color: #151622 !important;
+  font-size: 0.9rem; border-radius: 12px; padding: 10px 8px; width: 100%;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.22); transition: transform 0.2s, box-shadow 0.2s; outline: none;
+}
+#fco-client-app input.fco-strip-input::placeholder { color: rgba(21,22,34,0.55) !important; -webkit-text-fill-color: rgba(21,22,34,0.55) !important; opacity: 1 !important; }
+#fco-client-app input.fco-strip-input:focus { transform: scale(1.05); box-shadow: 0 14px 28px rgba(0,0,0,0.28); border-color: rgba(223,21,124,0.35) !important; }
+
+#fco-client-app .fco-strip-actions { position: absolute; top: 15px; right: 15px; opacity: 0; transition: opacity 0.2s; z-index: 3; }
+#fco-client-app .fco-palette-strip:hover .fco-strip-actions { opacity: 1; }
+
+#fco-client-app .fco-strip-del {
+  width: 32px; height: 32px; border-radius: 50%; background: rgba(255,255,255,0.9);
+  color: #CE3D27; display: grid; place-items: center; font-weight: 950;
+  box-shadow: 0 8px 18px rgba(0,0,0,0.22); cursor: pointer;
+}
+#fco-client-app .fco-strip-del:hover { transform: scale(1.1); background: #fff; }
+
+#fco-client-app .fco-add-strip {
+  flex: 0 0 64px !important; min-width: 64px !important;
+  background: rgba(255,255,255,0.06); cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  border: 1px solid rgba(255,255,255,0.12); border-radius: 18px;
+  transition: background 0.2s, color 0.2s; color: rgba(242,242,242,0.75);
+  position: relative; z-index: 20 !important; pointer-events: auto !important;
+}
+#fco-client-app .fco-add-strip:hover { background: rgba(255,255,255,0.10); color: #FBCCBF; }
+#fco-client-app .fco-add-icon { font-size: 2rem; font-weight: 300; }
+
+/* =========================================================
+   MEDIA & TYPOGRAPHY
+   ========================================================= */
+
+#fco-client-app .fco-wiz-media { display: flex; flex-direction: column; gap: 16px; align-items: center; width: 100%; max-width: 800px; }
+#fco-client-app .fco-media-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; width: 100%; }
+#fco-client-app .fco-media-item { position: relative; aspect-ratio: 1/1; background: rgba(255,255,255,0.06); border-radius: 14px; border: 1px solid rgba(255,255,255,0.10); display: grid; place-items: center; overflow: hidden; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+#fco-client-app .fco-media-item img { max-width: 80%; max-height: 80%; object-fit: contain; }
+#fco-client-app .fco-media-x { position: absolute; top: 4px; right: 4px; width: 24px; height: 24px; background: rgba(255,255,255,0.9); border-radius: 6px; color: #CE3D27; font-weight: 950; box-shadow: 0 2px 4px rgba(0,0,0,0.2); cursor: pointer; }
+
+#fco-client-app .fco-typo-grid { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 700px; }
+#fco-client-app .fco-typo-row { display: grid; grid-template-columns: 100px 1fr 100px; gap: 12px; align-items: center; background: rgba(255,255,255,0.06); padding: 12px 18px; border-radius: 18px; border: 1px solid rgba(255,255,255,0.10); }
+#fco-client-app .fco-typo-label { font-weight: 950; color: #fff; font-size: 0.8rem; text-transform: uppercase; }
+#fco-client-app .fco-typo-input { width: 100%; background: transparent; border: none; font-size: 1.1rem; font-weight: 850; color: var(--txt); outline: none; }
+#fco-client-app .fco-typo-input::placeholder { color: rgba(242,242,242,0.40); }
+
+/* =========================================================
+   STAFF THUMBNAILS (WIZARD & DASHBOARD MERGED)
+   ========================================================= */
+#fco-client-app .staff-thumb-wrap { position: relative; width: 60px; height: 60px; }
+#fco-client-app .staff-thumb-wrap:hover .staff-upload-overlay { opacity: 1; }
+#fco-client-app .staff-upload-overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.5); border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0; transition: opacity 0.2s; cursor: pointer; border: none;
+}
+#fco-client-app .staff-upload-overlay .dashicons { color: #fff; font-size: 24px; width: 24px; height: 24px; }
+
+#fco-client-app .fco-wizard-card .staff-thumb-wrap,
+#fco-client-app .fco-wizard-card .staff-thumb,
+#fco-client-app .staff-thumb,
+#fco-client-app .staff-thumb-wrap { 
+  position: relative; cursor: pointer; border: 1px solid rgba(255,255,255,0.12);
+  width: 60px !important; height: 60px !important; flex: 0 0 60px !important;
+  aspect-ratio: 1 / 1; border-radius: 999px !important; overflow: hidden !important;
+  box-shadow: 0 10px 22px rgba(0,0,0,0.28); background: rgba(255,255,255,0.10);
+  display: grid !important; place-items: center !important; align-self: start !important;
+  margin-top: 4px;
+}
+#fco-client-app .fco-wizard-card .staff-thumb img,
+#fco-client-app .fco-wizard-card .staff-thumb-wrap img,
+#fco-client-app .staff-thumb img {
+  width: 100% !important; height: 100% !important; object-fit: cover !important; display: block !important;
+}
+#fco-client-app .staff-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); color: #fff; display: flex; align-items: center; justify-content: center; opacity: 0; transition: opacity 0.2s; font-size: 14px; text-align: center; backdrop-filter: blur(2px); }
+#fco-client-app .staff-thumb:hover .staff-overlay { opacity: 1; }
+#fco-client-app .staff-thumb:empty::before { content: "+"; display:flex; align-items:center; justify-content:center; width:100%; height:100%; color: #fff; font-size:20px; }
+
+/* Wizard Staff Rows */
+#fco-client-app #wiz-team-list .fco-typo-row,
+#fco-client-app #wiz-staff-list .fco-typo-row,
+#fco-client-app .wiz-team-list .fco-typo-row,
+#fco-client-app .wiz-staff-list .fco-typo-row,
+#fco-client-app .fco-wizard-card .fco-typo-row.staff-row,
+#fco-client-app .fco-wizard-card .fco-typo-row.team-row {
+  width: 100%; max-width: 900px; margin: 0 auto 14px auto; padding: 16px;
+  border-radius: 18px; border: 1px solid var(--line); background: rgba(255,255,255,0.05);
+  display: grid !important; grid-template-columns: 72px 1fr !important;
+  align-items: start !important; text-align: left; box-shadow: inset 0 0 14px rgba(0,0,0,0.22);
+}
+
+/* Ensure fields column has spacing */
+#fco-client-app #wiz-team-list .fco-typo-row > :last-child,
+#fco-client-app #wiz-staff-list .fco-typo-row > :last-child { display: grid; gap: 12px; min-width: 0; }
+
+/* =========================================================
+   BRAND POSTER
+   ========================================================= */
+#fco-client-app .fco-brand-poster { width: 100%; max-width: 900px; aspect-ratio: 16/10; border-radius: 0; box-shadow: 0 20px 60px rgba(0,0,0,0.45); display: flex; flex-direction: column; overflow: hidden; border: 1px solid rgba(255,255,255,0.10); position: relative; background: rgba(255,255,255,0.04); }
+#fco-client-app .fco-poster-header { padding: 40px 50px; background: rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.10); }
+#fco-client-app .fco-poster-h1 { font-size: 2.8rem; font-weight: 980; margin: 0; color: var(--txt); line-height: 1.1; letter-spacing: -0.03em; }
+#fco-client-app .fco-poster-tagline { font-size: 1.1rem; color: var(--txt-mute); margin-top: 8px; font-weight: 600; }
+#fco-client-app .fco-poster-body { flex: 1; display: grid; grid-template-columns: 1fr 1fr; padding: 40px 50px; gap: 40px; background: rgba(255,255,255,0.03); }
+#fco-client-app .fco-poster-section h3 { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: #fff; font-weight: 950; margin: 0 0 20px 0; border-bottom: 2px solid rgba(255,255,255,0.08); padding-bottom: 10px; }
+#fco-client-app .fco-poster-logo img { max-width: 100%; max-height: 120px; object-fit: contain; display: block; }
+#fco-client-app .fco-poster-fonts { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 12px; }
+#fco-client-app .fco-poster-font { font-size: 1.1rem; font-weight: 700; color: var(--txt-soft); display: flex; align-items: center; gap: 10px; }
+#fco-client-app .fco-poster-font::before { content: "Aa"; display: inline-block; background: rgba(255,255,255,0.06); padding: 4px 8px; border-radius: 6px; font-size: 0.8rem; color: rgba(242,242,242,0.55); }
+#fco-client-app .fco-poster-footer { padding: 0; display: flex; height: 60px; width: 100%; }
+#fco-client-app .fco-poster-strip { flex: 1; height: 100%; }
+
+/* =========================================================
+   CHIPS, PAGE BUILDER, SITEMAP
+   ========================================================= */
+
+#fco-client-app .fco-chiplist { margin-top: 20px; display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; }
+#fco-client-app .fco-chip { display: inline-flex; align-items: center; gap: 10px; padding: 12px 20px; border-radius: 999px; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.10); font-weight: 850; color: var(--txt); box-shadow: 0 10px 22px rgba(0,0,0,0.28); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+#fco-client-app .fco-chip-x { color: #fff; font-weight: 950; font-size: 1.2rem; cursor: pointer; padding: 0 4px; }
+#fco-client-app .fco-chip-x:hover { color: #CE3D27; }
+
+/* SITEMAP BUILDER (STEP 19) - UPDATED */
+#fco-client-app .fco-pagebuilder,
+#fco-client-app .fco-page-builder,
+#fco-client-app .fco-sitemap,
+#fco-client-app .fco-pages,
+#fco-client-app .fco-pagelist,
+#fco-client-app .fco-pagebuild {
+  width: 100%; max-width: 760px; margin: 0 auto; list-style: none !important; padding: 0 !important;
+}
+
+#fco-client-app .fco-pagebuild li,
+#fco-client-app .fco-pagelist .fco-pageitem {
+  margin: 0 0 12px 0 !important; padding: 14px 16px !important;
+  border-radius: 18px !important; border: 1px solid var(--line) !important;
+  background: rgba(255,255,255,0.05) !important; box-shadow: inset 0 0 14px rgba(0,0,0,0.18);
+  display: flex !important; align-items: center !important; justify-content: space-between !important;
+  grid-template-columns: none !important; /* Reset grid */
+  text-align: left;
+}
+#fco-client-app .fco-pageitem-inner { display:contents; } /* flatten if inner wrapper exists */
+
+#fco-client-app .fco-pageactions,
+#fco-client-app .fco-pagelist .fco-pageitem > :first-child,
+#fco-client-app .fco-pagebuild li > :first-child {
+  display: flex !important; flex-direction: row !important; gap: 8px !important; align-items: center !important; justify-content: flex-start !important; width: auto !important;
+}
+
+#fco-client-app .fco-title { flex: 1; padding: 0 10px; font-weight: 850; font-size: 1.1rem; color: var(--txt); outline: none; text-align: left; white-space: normal !important; overflow: visible !important; text-overflow: unset !important; }
+#fco-client-app .fco-title:focus { color: #FBCCBF; text-decoration: underline; }
+
+#fco-client-app .fco-pagebuild button,
+#fco-client-app .fco-pagelist .fco-mini {
+  width: 32px; height: 32px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.14);
+  background: rgba(255,255,255,0.06); color: #FBCCBF; display: grid; place-items: center; font-weight: 900; box-shadow: none;
+}
+
+#fco-client-app .fco-pageadd { width: 100%; max-width: 560px; margin: 0 auto 20px auto; display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; }
+#fco-client-app .fco-pageadd button { padding: 10px 16px !important; border-radius: 999px !important; border: 1px solid rgba(255,255,255,0.18) !important; background: rgba(255,255,255,0.10) !important; color: #fff !important; font-weight: 850 !important; }
+#fco-client-app .fco-pageadd button:hover { background: rgba(255,255,255,0.14) !important; }
+
+/* =========================================================
+   EXTRACTED STYLES & OVERRIDES (GRID, HAMBURGER, COMMENTS)
+   ========================================================= */
+
+/* Contact & Socials Grids */
+#fco-client-app .fco-wiz-contact-grid { display: grid; gap: 20px; width: 100%; }
+@media (min-width: 1000px) {
+  #fco-client-app .fco-wiz-contact-grid { grid-template-columns: 1fr 1fr 1fr; gap: 25px; padding: 35px; box-sizing: border-box; }
+  #fco-client-app .fco-wiz-contact-grid .fco-field-group { margin-bottom: 0 !important; }
+}
+#fco-client-app #wiz-soc-list { display: grid; gap: 10px; width: 100%; }
+@media (min-width: 600px) { #fco-client-app #wiz-soc-list { grid-template-columns: 1fr 1fr; } }
+@media (min-width: 1000px) { #fco-client-app #wiz-soc-list { grid-template-columns: 1fr 1fr 1fr; } }
+#fco-client-app #wiz-soc-list .fco-typo-row { width: 100%; box-sizing: border-box; display: flex; gap: 5px; }
+#fco-client-app #wiz-soc-list .fco-typo-input { width: 100% !important; min-width: 0 !important; }
+
+/* Rich Wizard & Layout Overrides */
+#fco-client-app .fco-wiz-rich-container { width: 100%; box-sizing: border-box; }
+@media (min-width: 1000px) { .fco-wiz-rich-container { padding: 35px; } }
+.fco-wiz-rich-container .fco-split-stage { height: 60vh; min-height: 500px; }
+
+#fco-client-app .fco-grid { grid-template-columns: 320px 1fr !important; }
+#fco-client-app .fco-aside { display: none !important; }
+
+/* Brand Summary Grid & Fallback */
+#fco-client-app .fco-summary-grid,
+#fco-client-app .fco-snapshot .fco-summary-grid,
+#fco-client-app .fco-overview .fco-summary-grid {
+  display: grid !important; gap: 50px !important; width: 100%; max-width: 100%; text-align: left; margin: 0 auto;
+}
+@media (min-width: 768px) { 
+  #fco-client-app .fco-summary-grid,
+  #fco-client-app .fco-snapshot .fco-summary-grid,
+  #fco-client-app .fco-overview .fco-summary-grid {
+    grid-template-columns: 1fr 2fr !important; align-items: start !important;
+  }
+}
+#fco-client-app .fco-summary-col-colors { display: flex; flex-direction: column; height: 100%; min-height: 400px; border-radius: 12px; overflow: hidden; box-shadow: 0 10px 22px rgba(0,0,0,0.28); border: 1px solid rgba(255,255,255,0.10); }
+#fco-client-app .fco-summary-color-strip { flex: 1; width: 100%; transition: flex 0.2s; }
+#fco-client-app .fco-summary-color-strip:hover { flex: 1.5; }
+#fco-client-app .fco-summary-details { display: flex; flex-direction: column; gap: 25px; padding: 10px; }
+#fco-client-app .fco-summary-h1 { font-size: 1.5rem; font-weight: 900; line-height: 1; margin: 0; color: var(--txt); letter-spacing: -0.02em; }
+#fco-client-app .fco-summary-tag { font-size: 1.3rem; color: var(--txt-mute); font-weight: 650; margin-top: 8px; }
+#fco-client-app .fco-summary-label { text-transform: uppercase; font-size: 0.75rem; color: #fff; font-weight: 950; letter-spacing: 0.05em; margin-bottom: 8px; }
+#fco-client-app .fco-summary-font-row { font-size: 1.2rem; margin-bottom: 5px; color: var(--txt-soft); }
+
+/* Comments */
+#fco-client-app .fco-comments-section { margin-top: 30px; border-top: 1px solid var(--line); padding-top: 20px; }
+#fco-client-app .fco-comments-toggle { cursor: pointer; display: flex; align-items: center; gap: 10px; font-weight: 850; color: var(--txt-mute); user-select: none; }
+#fco-client-app .fco-comments-toggle:hover { color: #FBCCBF; }
+#fco-client-app .fco-comments-toggle span { display: inline-flex; align-items: center; justify-content: center; min-width: 22px; height: 22px; padding: 0 6px; border-radius: 999px; background: #fff; color: #000000; font-size: 0.75rem; font-weight: 600; }
+#fco-client-app .fco-comments-body { display: none; margin-top: 20px; background: rgba(255,255,255,0.06); border-radius: 12px; padding: 20px; border: 1px solid rgba(255,255,255,0.10); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+#fco-client-app .fco-comments-body.open { display: block; }
+#fco-client-app .fco-comment-item { background: rgba(255,255,255,0.06); padding: 12px; border-radius: 8px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.10); box-shadow: 0 10px 22px rgba(0,0,0,0.28); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+
+/* Hamburger Menu */
+#fco-client-app .fco-menu-btn { width: 34px; height: 34px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.12); background: rgba(255,255,255,0.06); color: var(--txt); display: flex; align-items: center; justify-content: center; cursor: pointer; transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease; backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); }
+#fco-client-app .fco-menu-btn:hover { background: rgba(255,255,255,0.10); border-color: rgba(255,255,255,0.20); transform: translateY(-1px); }
+#fco-client-app .fco-menu-btn svg { stroke: var(--txt); }
+#fco-client-app .fco-menu-dropdown { display: none; position: absolute; top: calc(100% + 10px); right: 0; width: 220px; background: rgba(20,20,30,0.55); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; box-shadow: 0 18px 40px rgba(0,0,0,0.45); z-index: 100; flex-direction: column; padding: 10px; backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px); }
+#fco-client-app .fco-menu-dropdown.show { display: flex; }
+#fco-client-app .fco-menu-item { text-align: left; padding: 10px 12px; font-size: 1rem !important; line-height: 1.5rem !important; background: transparent; border: none; cursor: pointer; transition: background 0.1s, color 0.1s; width: 100%; display: block; text-decoration: none; color: rgba(242,242,242,0.78); border-radius: 12px; }
+#fco-client-app .fco-menu-item:hover { background: rgba(255,255,255,0.08); color: var(--txt) !important; }
+#fco-client-app .fco-menu-item.danger { color: rgba(206,61,39,0.95); }
+#fco-client-app .fco-menu-item.danger:hover { background: rgba(206,61,39,0.18); color: #fff !important; }
+
+/* Image Clamps for Wizard */
+#fco-client-app .fco-wizard-card .fco-media-grid img,
+#fco-client-app .fco-wizard-card .fco-media-item img,
+#fco-client-app .fco-wizard-card img[data-preview],
+#fco-client-app .fco-wizard-card img.preview {
+  display: block; max-width: 100%; width: auto; height: 100px !important; max-height: 100px !important; object-fit: contain !important; border-radius: 14px; background: rgba(255,255,255,0.06);
+}
+
+/* Responsive Media Queries */
+@media (max-width: 1200px) { #fco-client-app .fco-grid { grid-template-columns: 280px 1fr; } #fco-client-app .fco-aside { display: none; } }
+@media (max-width: 900px) { 
+    #fco-client-app .fco-split-stage { grid-template-columns: 1fr; } 
+    #fco-client-app .wiz-grid-3, #fco-client-app .social-grid, #fco-client-app .inspiration-grid { grid-template-columns: 1fr 1fr; } 
+    #fco-client-app .fco-summary-grid { grid-template-columns: 1fr !important; text-align: center; } 
+}
+@media (max-width: 782px) { 
+    #fco-client-app .fco-header { flex-wrap: wrap; } 
+    #fco-client-app .fco-tab-nav { margin: 0; width: 100%; overflow-x: auto; padding-bottom: 5px; } 
+    #fco-client-app .fco-editor { padding: 20px; } 
+    #fco-client-app .fco-wizard-question { font-size: 2rem; } 
+    #fco-client-app .fco-wiz-field { font-size: 1.05rem; padding: 14px 14px; } 
+    #fco-client-app .fco-node-inner { grid-template-columns: 20px 1fr auto; } 
+    #fco-client-app .fco-node-actions { display: none; } 
+    #fco-client-app .fco-palette-stage { flex-direction: column; height: auto; } 
+    #fco-client-app .fco-palette-strip { width: 100%; min-height: 80px; flex-direction: row; justify-content: space-between; } 
+    #fco-client-app .fco-strip-inputs { max-width: none; flex-direction: row; } 
+    #fco-client-app .fco-brand-poster { aspect-ratio: auto; height: auto; } 
+    #fco-client-app .fco-poster-body { grid-template-columns: 1fr; gap: 20px; } 
+    #fco-client-app .fco-wiz-choice { padding: 16px 24px; font-size: 1rem; width: 100%; } 
+    #fco-client-app .fco-wizard-body { padding: 20px; } 
+    #fco-client-app .wiz-grid-3, #fco-client-app .social-grid, #fco-client-app .inspiration-grid { grid-template-columns: 1fr; } 
+    #fco-client-app #wiz-team-list .fco-typo-row, #fco-client-app #wiz-staff-list .fco-typo-row { grid-template-columns: 1fr !important; text-align: center; } 
+    #fco-client-app .fco-wizard-card .staff-thumb-wrap { margin: 0 auto 10px auto; } 
+    #fco-client-app .fco-pagebuild li { grid-template-columns: 44px 1fr !important; padding: 12px 14px !important; }
+    #fco-client-app .fco-pagebuild :is(button, .fco-mini) { width: 30px; height: 30px; }
+}
+@media (max-height: 700px) { 
+    #fco-client-app .fco-wizard-body { padding: 20px; gap: 16px; } 
+    #fco-client-app .fco-wizard-question { font-size: 1.8rem; margin-top: 0; } 
+    #fco-client-app .fco-wiz-field { font-size: 1.05rem; } 
+    #fco-client-app .fco-wizard-topbar, #fco-client-app .fco-wizard-footer { padding: 15px 30px; } 
+}
