@@ -3,7 +3,7 @@
  * Plugin Name: Foundation: Content Onboard
  * Plugin URI: https://github.com/hawks010/foundation-content-onboard
  * Description: Content onboarding portal. Admin editor + client wizard via token link.
- * Version: 2.4.3
+ * Version: 2.4.4
  * Author: Sonny x Inkfire
  * Update URI: https://github.com/hawks010/foundation-content-onboard
  */
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 // -----------------------------------------------------------------------------
 // Constants
 // -----------------------------------------------------------------------------
-define( 'FCO_VERSION', '2.4.3' );
+define( 'FCO_VERSION', '2.4.4' );
 define( 'FCO_PLUGIN_FILE', __FILE__ );
 define( 'FCO_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'FCO_PLUGIN_URL', plugin_dir_url( __FILE__ ) );

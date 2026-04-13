@@ -61,6 +61,15 @@ class FCO_Admin {
             'Content Onboard',
             'Content Onboard',
             $cap_manage,
+            'foundation-content-onboard',
+            [__CLASS__, 'render_dashboard_page']
+        );
+
+        add_submenu_page(
+            $parent_slug,
+            'Onboard Projects',
+            'Onboard Projects',
+            $cap_manage,
             'edit.php?post_type=ink_onboard'
         );
 
@@ -99,8 +108,96 @@ class FCO_Admin {
         if (!current_user_can('manage_options')) {
             wp_die(__('You do not have permission to access this page.'));
         }
-        wp_safe_redirect(admin_url('edit.php?post_type=ink_onboard'));
+        wp_safe_redirect(admin_url('admin.php?page=foundation-content-onboard'));
         exit;
+    }
+
+    private static function get_shell_config() {
+        $counts = wp_count_posts('ink_onboard');
+        $published = isset($counts->publish) ? (int) $counts->publish : 0;
+        $drafts = isset($counts->draft) ? (int) $counts->draft : 0;
+        $portal_id = (int) get_option('fco_portal_page_id');
+        $portal_url = $portal_id ? get_permalink($portal_id) : '';
+
+        return [
+            'plugin' => 'content-onboard',
+            'rootId' => 'foundation-admin-app',
+            'eyebrow' => __('Foundation command centre', 'foundation-content-onboard'),
+            'title' => __('Foundation: Content Onboard', 'foundation-content-onboard'),
+            'description' => __('A shared Foundation dashboard has been added without changing the existing project editor, CPT storage, or inkfire/v1 REST routes.', 'foundation-content-onboard'),
+            'badge' => 'v' . FCO_VERSION,
+            'themeStorageKey' => 'foundation-content-onboard-theme',
+            'actions' => [
+                [
+                    'label' => __('Create project', 'foundation-content-onboard'),
+                    'href' => admin_url('post-new.php?post_type=ink_onboard'),
+                    'variant' => 'solid',
+                ],
+                [
+                    'label' => __('GitHub backup', 'foundation-content-onboard'),
+                    'href' => 'https://github.com/hawks010/foundation-content-onboard',
+                    'target' => '_blank',
+                    'variant' => 'ghost',
+                ],
+            ],
+            'metrics' => [
+                [
+                    'label' => __('Published projects', 'foundation-content-onboard'),
+                    'value' => number_format_i18n($published),
+                    'meta' => __('Live Content Onboard projects.', 'foundation-content-onboard'),
+                ],
+                [
+                    'label' => __('Draft projects', 'foundation-content-onboard'),
+                    'value' => number_format_i18n($drafts),
+                    'meta' => __('Work still being prepared.', 'foundation-content-onboard'),
+                ],
+                [
+                    'label' => __('Portal page', 'foundation-content-onboard'),
+                    'value' => $portal_id ? __('Ready', 'foundation-content-onboard') : __('Missing', 'foundation-content-onboard'),
+                    'meta' => $portal_url ?: __('The activation-created portal page was not found.', 'foundation-content-onboard'),
+                    'tone' => $portal_id ? 'accent' : 'danger',
+                ],
+            ],
+            'sections' => [
+                [
+                    'id' => 'content-onboard-workspace',
+                    'navLabel' => __('Workspace', 'foundation-content-onboard'),
+                    'eyebrow' => __('Client content portal', 'foundation-content-onboard'),
+                    'title' => __('Projects, portal shortcuts, and editor app', 'foundation-content-onboard'),
+                    'description' => __('Use this dashboard to open the existing CPT editor app and the generated client portal.', 'foundation-content-onboard'),
+                    'templateId' => 'foundation-content-onboard-workspace',
+                ],
+            ],
+        ];
+    }
+
+    public static function render_dashboard_page() {
+        $portal_id = (int) get_option('fco_portal_page_id');
+        $portal_url = $portal_id ? get_permalink($portal_id) : '';
+
+        ob_start();
+        ?>
+        <div class="fp-card">
+            <h2><?php esc_html_e('Content workspace', 'foundation-content-onboard'); ?></h2>
+            <p class="description"><?php esc_html_e('The client content editor is still powered by the existing custom post type and REST app. This dashboard simply gives the plugin the same Foundation entry pattern as the rest of the suite.', 'foundation-content-onboard'); ?></p>
+            <div class="foundation-shell-actions">
+                <a class="button button-primary" href="<?php echo esc_url(admin_url('edit.php?post_type=ink_onboard')); ?>"><?php esc_html_e('Open projects', 'foundation-content-onboard'); ?></a>
+                <a class="button" href="<?php echo esc_url(admin_url('post-new.php?post_type=ink_onboard')); ?>"><?php esc_html_e('Create project', 'foundation-content-onboard'); ?></a>
+                <?php if ($portal_url) : ?>
+                    <a class="button" href="<?php echo esc_url($portal_url); ?>" target="_blank" rel="noopener noreferrer"><?php esc_html_e('View client portal', 'foundation-content-onboard'); ?></a>
+                <?php endif; ?>
+            </div>
+        </div>
+        <?php
+        $workspace = ob_get_clean();
+        ?>
+        <div class="wrap foundation-admin-wrap">
+            <div id="foundation-admin-app">
+                <p><?php esc_html_e('Loading Foundation shell...', 'foundation-content-onboard'); ?></p>
+            </div>
+            <template id="foundation-content-onboard-workspace"><?php echo $workspace; ?></template>
+        </div>
+        <?php
     }
 
     public static function force_one_column($result) {
@@ -151,6 +248,20 @@ class FCO_Admin {
 
     public static function enqueue_admin_app($hook) {
         global $post;
+        if (false !== strpos((string) $hook, 'foundation-content-onboard')) {
+            $asset_version = defined('FCO_VERSION') ? FCO_VERSION : time();
+            $asset_base = trailingslashit(FCO_PLUGIN_URL) . 'assets/admin/';
+
+            wp_enqueue_style('foundation-admin-shell', $asset_base . 'foundation-admin-shell.css', [], $asset_version);
+            wp_enqueue_script('foundation-admin-shell', $asset_base . 'foundation-admin-shell.js', ['wp-element'], $asset_version, true);
+            wp_add_inline_script(
+                'foundation-admin-shell',
+                'window.foundationAdminShellData = ' . wp_json_encode(self::get_shell_config()) . ';',
+                'before'
+            );
+            return;
+        }
+
         if (($hook !== 'post.php' && $hook !== 'post-new.php') || !$post || $post->post_type !== 'ink_onboard') {
             return;
         }
