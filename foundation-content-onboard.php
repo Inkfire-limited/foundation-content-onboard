@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: Foundation: Content Onboard
- * Plugin URI: https://github.com/hawks010/foundation-content-onboard
+ * Plugin URI: https://github.com/Inkfire-limited/foundation-content-onboard
  * Description: Content onboarding portal. Admin editor + client wizard via token link.
  * Version: 2.4.4
  * Author: Sonny x Inkfire
- * Update URI: https://github.com/hawks010/foundation-content-onboard
+ * Update URI: https://github.com/Inkfire-limited/foundation-content-onboard
  */
 
 if ( ! defined( 'ABSPATH' ) ) {

@@ -135,7 +135,7 @@ class FCO_Admin {
                 ],
                 [
                     'label' => __('GitHub backup', 'foundation-content-onboard'),
-                    'href' => 'https://github.com/hawks010/foundation-content-onboard',
+                    'href' => 'https://github.com/Inkfire-limited/foundation-content-onboard',
                     'target' => '_blank',
                     'variant' => 'ghost',
                 ],
