@@ -174,6 +174,7 @@
       const $home = $('.fco-sitebar-actions');
       if (!$home.length) return;
       $('#fco-project-label, #fco-help-open, #fco-signout').detach().appendTo($home);
+      $('#fco-presence').detach().prependTo($('.fco-project-strip'));
       $home.find('.fco-step-picker-label').remove();
       document.body.classList.remove('fco-wizard-header-active');
     },
@@ -182,7 +183,7 @@
       const $home = $('.fco-sitebar-actions');
       if (!$home.length) return;
       $root.find('.fco-step-picker-label').detach().appendTo($home);
-      $root.find('.fco-wizard-brand').empty().append($('<span>', {class:'fco-wizard-eyebrow',text:'Inkfire website onboarder'}), $('#fco-project-label').detach());
+      $root.find('.fco-wizard-brand').empty().append($('<span>', {class:'fco-wizard-eyebrow',text:'Inkfire website onboarder'}), $('#fco-project-label').detach(), $('#fco-presence').detach());
       $('#fco-help-open, #fco-signout').detach().appendTo($root.find('.fco-wizard-top-actions'));
       document.body.classList.add('fco-wizard-header-active');
     },
