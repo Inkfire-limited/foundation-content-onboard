@@ -110,7 +110,8 @@ class FCO_CPT {
         $encoded = wp_json_encode($data);
         if (!$encoded) return false;
 
-        update_post_meta($post_id, self::META_KEY, $encoded);
+        // The metadata API unslashes strings; preserve JSON quotes and backslashes.
+        update_post_meta($post_id, self::META_KEY, wp_slash($encoded));
         return true;
     }
 

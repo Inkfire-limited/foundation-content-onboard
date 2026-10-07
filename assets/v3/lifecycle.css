@@ -1,0 +1,9 @@
+/* Project management only. Client branding and questionnaire styles are unchanged. */
+.fco-hub-admin .fco-detail-meta{display:flex;flex-direction:column;align-items:flex-end;gap:12px;min-width:0}
+.fco-hub-admin .fco-project-actions{display:flex;align-items:center;justify-content:flex-end;gap:8px;flex-wrap:wrap}
+.fco-hub-admin .fco-project-actions .button,.fco-hub-admin #fco-undo-delete{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:8px 14px;line-height:1.35;white-space:normal;margin:0}
+.fco-hub-admin .fco-button-danger{color:#982e28;border-color:#b54b43;background:#fff}
+.fco-hub-admin .fco-button-danger:hover{color:#fff;border-color:#982e28;background:#982e28}
+.fco-hub-admin .fco-project-actions .button:focus-visible{outline:3px solid #218065;outline-offset:3px}
+.fco-hub-admin .fco-detail-head h2{overflow-wrap:anywhere}
+@media(max-width:600px){.fco-hub-admin .fco-detail-meta{width:100%;align-items:flex-start}.fco-hub-admin .fco-project-actions{width:100%;justify-content:flex-start}.fco-hub-admin .fco-project-actions .button{flex:1 1 130px}}

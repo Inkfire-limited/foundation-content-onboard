@@ -1,0 +1,18 @@
+{
+  "name": "inkfire/foundation-content-onboard",
+  "description": "Private portal and developer brief dependencies",
+  "type": "wordpress-plugin",
+  "license": "GPL-2.0-or-later",
+  "require": {
+    "dompdf/dompdf": "3.1.6",
+    "dompdf/php-font-lib": "1.0.2",
+    "dompdf/php-svg-lib": "1.0.2",
+    "masterminds/html5": "2.11.0",
+    "sabberworm/php-css-parser": "9.5.0"
+  },
+  "config": {
+    "vendor-dir": "vendor-brief",
+    "allow-plugins": {}
+  },
+  "scripts": {}
+}

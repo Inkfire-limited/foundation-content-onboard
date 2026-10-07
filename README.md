@@ -10,7 +10,7 @@ Part of the Foundation plugin series by Inkfire Limited.
 
 | | |
 |---|---|
-| Current version | 2.4.4 |
+| Current version | 3.0.3 |
 | Requires WordPress | 6.0+ |
 | Tested up to | 6.9 |
 | Requires PHP | 7.4+ |
@@ -64,7 +64,7 @@ there; this file is the human-readable overview.
 ## A note on client data
 
 Client submissions are stored in the host WordPress database, not in this repository.
-Wizard tokens are per-brief and expire. Nothing client-identifying should be committed
+Project invitation links are revocable and do not expire automatically; authenticated browser sessions do expire. Nothing client-identifying should be committed
 here.
 
 ## Why this repository is public
@@ -75,9 +75,14 @@ plugin. The code contains no credentials or client data.
 
 ## Source of truth
 
-The live installation on inkfire.co.uk is authoritative. This repository was verified
-byte-identical to the live copy on 2026-08-05. If they diverge, reconcile from live.
+The live installation on inkfire.co.uk is authoritative. The production runtime was reconciled on 2026-10-07, including the responsive presence fixes. Maintained GitHub organisation metadata is preserved. If they diverge, reconcile from live.
 
 ## Licence
 
 GPLv2 or later. See [LICENSE](LICENSE).
+
+## Build dependencies
+
+Developer brief rendering uses the exact production dependency versions pinned in `composer.lock`. Run `composer install --no-dev --no-scripts --no-plugins --prefer-dist --optimize-autoloader`; the vendor directory is `vendor-brief/`. Include it in the plugin ZIP. The repository includes the locked vendor files so source archives are complete.
+
+The receiving connector is distributed separately through the Inkfire Onboard Connector GitHub release. Historical ZIPs from the live downloads directory are not required by the current portal and are not copied here.

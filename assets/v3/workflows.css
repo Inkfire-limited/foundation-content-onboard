@@ -1,0 +1,71 @@
+/* Client invitation controls: wp-admin only, including its native creation dialog. */
+.fco-hub-admin .fco-schedule-state{margin:18px 0;padding:18px 20px;border:1px solid #a6c9c2;border-left:4px solid #1b5d63;border-radius:14px;background:linear-gradient(135deg,#f7fbfa,#eaf4f1);color:#183b36;box-shadow:inset 0 1px 0 #fff}
+.fco-hub-admin .fco-schedule-state p{margin:8px 0 0;overflow-wrap:anywhere;line-height:1.6}
+.fco-hub-admin .fco-schedule-state.needs-attention{background:#fff5eb;border-color:#b96728;color:#66310d}
+.fco-hub-admin .fco-invite-schedule{margin:18px 0;border:1px solid #c5d8d3;border-radius:14px;padding:4px 18px;background:#f7fbfa}
+.fco-hub-admin .fco-invite-schedule summary{padding:14px 0;font-size:15px;font-weight:650;cursor:pointer;min-height:44px;box-sizing:border-box}
+.fco-hub-admin .fco-invite-schedule summary:focus-visible{outline:3px solid #1b5d63;outline-offset:3px}
+.fco-hub-admin #fco-schedule-form{padding:10px 0 14px}
+.fco-hub-admin #fco-schedule-form label{display:block;font-weight:650}
+.fco-hub-admin #fco-invite-date{display:block;width:100%;max-width:360px;min-height:46px;font-size:16px;padding:10px 12px;margin-top:8px;box-sizing:border-box}
+.fco-hub-admin #fco-schedule-form .button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:10px 16px;line-height:1.4;white-space:normal}
+.fco-hub-admin .fco-list-scheduled{color:#164d43;font-weight:650;line-height:1.5}
+@media(max-width:600px){.fco-hub-admin #fco-schedule-form .button{flex:1 1 180px}.fco-hub-admin .fco-invite-schedule{padding:4px 12px}.fco-hub-admin .fco-schedule-state{padding:16px}}
+
+.fco-hub-admin .fco-invitation-heading{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.fco-hub-admin .fco-invitation-heading h3{margin:0}
+.fco-hub-admin .fco-recipient-label{display:block;font-weight:650;font-size:14px;margin-top:20px}
+.fco-hub-admin .fco-invite-actions{margin:16px 0;align-items:center}
+.fco-hub-admin .fco-invite-actions .button,.fco-hub-admin .fco-invite-advanced .button{display:inline-flex;align-items:center;justify-content:center;min-height:44px;padding:9px 16px;line-height:1.35;white-space:normal;margin:0}
+.fco-hub-admin .fco-mail-disclaimer{color:#5a655f;font-size:12px;line-height:1.5}
+:is(.fco-hub-admin,.fco-create-dialog) .fco-invite-advanced{border-top:1px solid #dfe6e4;margin:22px 0;padding-top:16px}
+:is(.fco-hub-admin,.fco-create-dialog) .fco-invite-advanced summary{cursor:pointer;font-size:14px;font-weight:650;padding:8px 0;min-height:40px}
+:is(.fco-hub-admin,.fco-create-dialog) .fco-invite-advanced summary:focus-visible,.fco-create-dialog .fco-create-connection summary:focus-visible{outline:3px solid #32b190;outline-offset:3px}
+.fco-create-dialog .fco-invite-choice{border:1px solid #ffffff30;border-radius:14px;padding:14px;margin:20px 0}
+.fco-create-dialog .fco-invite-choice legend{font-size:15px;font-weight:700;padding:0 6px}
+.fco-create-dialog .fco-admin-form label.fco-invite-option{display:grid;grid-template-columns:20px minmax(0,1fr);gap:12px;align-items:start;padding:14px;border:1px solid #ffffff25;border-radius:10px;margin:6px 0 12px;cursor:pointer;font-weight:400}
+.fco-create-dialog .fco-admin-form label.fco-invite-option:has(input:checked){background:#32b1901c;border-color:#77d7bd}
+.fco-create-dialog .fco-admin-form .fco-invite-option input[type=radio]{display:inline-block;width:18px;height:18px;min-height:18px;max-width:18px;min-width:18px;margin:3px 0 0;padding:0;accent-color:#32b190}
+.fco-create-dialog .fco-invite-option strong{display:block;font-size:14px;line-height:1.4}
+.fco-create-dialog .fco-invite-option small{display:block;color:#cad5df;font-size:13px;line-height:1.5;margin-top:5px}
+.fco-create-dialog .fco-create-connection summary{cursor:pointer;font-size:15px;font-weight:700;min-height:44px;line-height:1.45;padding:10px 0}
+.fco-create-dialog .fco-create-connection summary span{font-weight:400;color:#c4ced8}
+.fco-create-dialog #fco-create-invite-preview{margin-bottom:0;overflow-wrap:anywhere}
+.fco-create-dialog .fco-action-row{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.fco-create-dialog .fco-action-row .button{min-height:44px;padding:9px 16px;line-height:1.35}
+.fco-create-dialog .fco-admin-form input:not([type=radio]),.fco-create-dialog .fco-admin-form textarea{font-size:16px;max-width:100%;box-sizing:border-box}
+@media(max-width:600px){
+ .fco-hub-admin .fco-invite-actions .button{flex:1 1 160px}
+ .fco-create-dialog .fco-invite-choice{padding:10px}
+ .fco-create-dialog .fco-admin-form label.fco-invite-option{padding:12px;gap:10px}
+ .fco-create-dialog .fco-action-row .button{flex:1 1 130px}
+}
+
+.fco-hub-admin .fco-extra-question-admin{margin:18px 0;padding:18px;border:1px solid #d7e1de;border-radius:14px;background:#fbfdfc}
+.fco-hub-admin .fco-extra-question-admin legend{padding:0 8px;font-weight:700;color:#173f39}
+.fco-hub-admin .fco-extra-question-admin .fco-form-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(220px,.45fr);gap:14px 18px}
+.fco-hub-admin .fco-extra-question-admin .fco-field-wide{grid-column:1/-1}
+.fco-hub-admin .fco-extra-question-admin input,.fco-hub-admin .fco-extra-question-admin select,.fco-hub-admin .fco-extra-question-admin textarea{display:block;width:100%;max-width:none;margin-top:6px;box-sizing:border-box}
+.fco-hub-admin .fco-extra-question-admin label{font-weight:650}
+.fco-hub-admin .fco-extra-answer{margin:14px 0;padding:11px 13px;border-radius:10px;background:#eef6f3;color:#274840;overflow-wrap:anywhere}
+.fco-hub-admin #fco-extra-question-list + .fco-action-row{margin-top:18px}
+@media(max-width:780px){.fco-hub-admin .fco-extra-question-admin .fco-form-grid{grid-template-columns:1fr}}
+
+
+.fco-hub-admin .fco-question-library{margin:18px 0 24px;padding:18px;border:1px solid #cfded9;border-radius:16px;background:#f7fbfa}
+.fco-hub-admin .fco-question-library[hidden]{display:none}
+.fco-hub-admin .fco-question-library h4{margin:0 0 6px}
+.fco-hub-admin .fco-question-library p{margin:0}
+.fco-hub-admin .fco-library-search{display:block;margin:16px 0;font-weight:650}
+.fco-hub-admin .fco-library-search input{display:block;width:100%;max-width:520px;margin-top:7px;min-height:42px}
+.fco-hub-admin .fco-library-item{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:center;padding:16px 0;border-top:1px solid #dbe7e3}
+.fco-hub-admin .fco-library-item:first-child{border-top:0}
+.fco-hub-admin .fco-library-item[hidden]{display:none}
+.fco-hub-admin .fco-library-item h5{font-size:15px;margin:3px 0 6px}
+.fco-hub-admin .fco-library-item p{color:#4b5f59;line-height:1.55;margin:0 0 8px}
+.fco-hub-admin .fco-library-kicker{font-size:11px;font-weight:750;letter-spacing:.06em;text-transform:uppercase;color:#38685e}
+.fco-hub-admin .fco-library-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.fco-hub-admin .fco-library-tag,.fco-hub-admin .fco-library-unused{display:inline-flex;align-items:center;min-height:28px;padding:4px 9px;border-radius:999px;background:#e3f0ec;color:#214f45;font-size:12px;font-weight:650}
+.fco-hub-admin .fco-library-unused{background:#eef1f0;color:#68736f}
+.fco-hub-admin .fco-library-item>.button{min-height:40px;white-space:nowrap}
+@media(max-width:780px){.fco-hub-admin .fco-library-item{grid-template-columns:1fr}.fco-hub-admin .fco-library-item>.button{justify-self:start}}

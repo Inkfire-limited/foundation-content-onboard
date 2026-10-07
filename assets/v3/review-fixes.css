@@ -1,0 +1,79 @@
+/* Review refinements use the existing palette and glass cards. */
+#fco-client-app .fco-answer-review {max-width:960px;width:100%;text-align:left}
+#fco-client-app .fco-review-heading {display:flex;gap:16px;align-items:center;justify-content:space-between}
+#fco-client-app .fco-review-heading h2 {margin:0;min-width:0}
+#fco-client-app .fco-review-answer {white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.65;margin-top:16px}
+#fco-client-app .fco-review-answer ul {padding-left:24px;white-space:normal}
+#fco-client-app .fco-review-answer li {margin:6px 0;white-space:pre-wrap}
+#fco-submission-status {flex:1 1 260px;line-height:1.5}
+#fco-submission-status:empty {display:none}
+#fco-client-app .fco-asset-purpose,#fco-client-app .fco-image-note {display:block;position:relative;padding:10px;font-size:14px;line-height:1.5;color:inherit}
+#fco-client-app .fco-asset-purpose select,#fco-client-app .fco-image-note textarea {width:100%;min-width:0;margin-top:6px}
+#fco-client-app :is(#wiz-mediagrid,#dash-mediagrid,#wiz-page-imgs,#editor-page-imgs) .fco-media-item {height:auto;aspect-ratio:auto;min-width:0}
+#fco-client-app :is(#wiz-mediagrid,#dash-mediagrid,#wiz-page-imgs,#editor-page-imgs) .fco-media-item>img {height:140px;object-fit:contain;width:100%}
+#fco-client-app .fco-wiz-choice.active,#fco-client-app .fco-wiz-choice[aria-pressed="true"] {background:#0e6055!important;color:#fff!important;border:3px solid #a5e4d3!important;box-shadow:0 0 0 2px #0e6055!important}
+#fco-client-app .fco-wiz-choice.active::before {content:'✓ ';font-weight:700}
+#fco-client-app .fco-pageitem-inner {min-width:0;flex-wrap:wrap;gap:10px}
+#fco-client-app .fco-pageitem .fco-title {display:block!important;min-width:120px;flex:1 1 160px;white-space:normal;overflow-wrap:anywhere}
+#fco-client-app .fco-pageactions {display:flex;flex-wrap:wrap;gap:8px}
+#fco-client-app .fco-pageactions .fco-mini {min-width:44px;min-height:44px}
+#fco-client-app .fco-pageactions .danger {margin-left:12px}
+#fco-client-app :is(.fco-editor-layout,.fco-main,.fco-main-content,.fco-split-stage,.fco-wiz-rich,.fco-form-grid,.fco-guided-panel,.fco-guided-detail-grid) {min-width:0;max-width:100%;box-sizing:border-box}
+.fco-submit-dialog {max-width:560px;color:#f2f2f2}
+@media(max-width:1024px){
+ #fco-client-app .fco-split-stage {grid-template-columns:minmax(0,1fr)}
+ #fco-client-app .fco-pageitem-inner {margin-left:0!important}
+ #fco-client-app .fco-pageitem[data-level="1"] {border-left:4px solid #a5e4d3}
+ #fco-client-app .fco-pageitem[data-level="2"],#fco-client-app .fco-pageitem[data-level="3"] {border-left:8px double #a5e4d3}
+}
+@media(max-width:600px){
+ #fco-client-app .fco-pageactions {flex:1 1 100%}
+ #fco-client-app .fco-review-heading {align-items:flex-start}
+ #fco-client-app .fco-review-heading button {flex-shrink:0}
+}
+
+#fco-client-app .fco-node-actions {gap:8px;flex-wrap:wrap}
+#fco-client-app .fco-node-actions .danger {margin-left:12px}
+@media(max-width:780px){
+ #fco-client-app .fco-tab-nav {display:flex;flex-wrap:wrap;overflow:visible;gap:8px;width:100%;height:auto;white-space:normal}
+ #fco-client-app .fco-tab-nav .fco-tab-btn {flex:1 1 110px;min-width:110px;margin:0;transform:none}
+ #fco-client-app .fco-toolbar {height:auto;min-height:0;overflow:visible}
+}
+
+/* These cards contain form controls, so thumbnail-sized columns are too narrow. */
+#fco-client-app :is(#wiz-page-imgs,#editor-page-imgs,#wiz-mediagrid,#dash-mediagrid) {
+ grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));
+ align-items:start;
+}
+#fco-client-app :is(#wiz-page-imgs,#editor-page-imgs,#wiz-mediagrid,#dash-mediagrid) .fco-media-item {
+ display:flex;flex-direction:column;align-items:stretch;justify-content:flex-start;
+ width:100%;box-sizing:border-box;padding-top:48px;
+}
+#fco-client-app :is(#wiz-page-imgs,#editor-page-imgs,#wiz-mediagrid,#dash-mediagrid) .fco-media-item>img {
+ align-self:center;max-width:calc(100% - 24px);max-height:none;height:120px;
+}
+#fco-client-app .fco-image-note,#fco-client-app .fco-asset-purpose {box-sizing:border-box;width:100%;padding:12px;line-height:1.5}
+#fco-client-app .fco-image-note textarea {box-sizing:border-box;min-height:110px;font-size:16px;line-height:1.5;resize:vertical}
+@media(max-width:767px){
+ #fco-client-app :is(#wiz-page-imgs,#editor-page-imgs,#wiz-mediagrid,#dash-mediagrid) {grid-template-columns:minmax(0,1fr)}
+}
+
+/* Social profiles are form cards, not the compact typography preview rows. */
+#fco-client-app #wiz-soc-list {grid-template-columns:repeat(auto-fit,minmax(min(100%,280px),1fr))}
+#fco-client-app #wiz-soc-list .fco-typo-row {display:grid;grid-template-columns:minmax(0,1fr);gap:12px}
+#fco-client-app #wiz-soc-list .fco-typo-input {
+ box-sizing:border-box;min-height:48px;padding:12px;border:1px solid #858593;
+ border-radius:14px;background:#151622;color:#f2f2f2;font-size:16px;font-weight:400;line-height:1.5;
+}
+#fco-client-app #wiz-soc-list .del-soc,
+#fco-client-app :is(#wiz-staff-list,#dash-staff-list) .staff-del {min-width:44px;min-height:44px;justify-self:end}
+@media(max-width:480px){
+ .fco-file-dialog .fco-dialog-actions {flex-direction:column;align-items:stretch}
+ .fco-file-dialog .fco-dialog-actions button {flex:0 0 auto;width:100%;min-height:48px}
+}
+@media(min-width:781px) and (max-width:1024px){
+ .fco-standalone #fco-client-app .fco-palette-stage {display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));height:auto;min-height:0}
+ .fco-standalone #fco-client-app .fco-palette-strip {min-width:0;padding:54px 16px 16px}
+ .fco-standalone #fco-client-app .fco-strip-inputs {max-width:none}
+ .fco-standalone #fco-client-app .fco-add-strip {min-height:64px}
+}
