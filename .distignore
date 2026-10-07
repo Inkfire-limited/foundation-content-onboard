@@ -1,0 +1,11 @@
+.git
+.github
+.gitignore
+.distignore
+docs
+tests
+node_modules
+*.bak
+*.bak-*
+*.orig
+*.old

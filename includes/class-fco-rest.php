@@ -28,14 +28,14 @@ class FCO_REST {
         register_rest_route($ns, '/project/sync_pages', [
             'methods'             => 'POST',
             'callback'            => [__CLASS__, 'handle_full_sync_request'],
-            'permission_callback' => function () { return current_user_can('edit_pages'); },
+            'permission_callback' => [__CLASS__, 'check_sync_access'],
         ]);
 
         // 4. Email Summary
         register_rest_route($ns, '/project/email_summary', [
             'methods'             => 'POST',
             'callback'            => [__CLASS__, 'send_project_summary_email'],
-            'permission_callback' => function () { return current_user_can('edit_pages'); },
+            'permission_callback' => [__CLASS__, 'check_staff_project_access'],
         ]);
     }
 
@@ -73,11 +73,12 @@ class FCO_REST {
     }
 
     public static function send_project_summary_email($request) {
+        if (!self::check_staff_project_access($request)) return new WP_Error('forbidden', 'You do not have permission to access this project.', ['status' => 403]);
         $project_id = (int) $request->get_param('project_id');
         if (!$project_id) return new WP_Error('no_pid', 'Missing project ID', ['status' => 400]);
 
         $data = FCO_CPT::get_project_data($project_id);
-        $branding = $data['branding'] ?? [];
+        $branding = (array) ($data['branding'] ?? []);
         $project = $data['project'] ?? [];
         $content = $data['content'] ?? [];
         
@@ -152,9 +153,10 @@ class FCO_REST {
                     $pages = $data['pages'] ?? [];
                     usort($pages, function($a, $b) { return ($a['sort']??0) - ($b['sort']??0); });
                     foreach($pages as $p): 
-                        $status = $data['drafts'][$p['id']]['status'] ?? 'empty';
+                        $draft_map = (array) ($data['drafts'] ?? []);
+                        $status = $draft_map[$p['id'] . '::main']['status'] ?? $draft_map[$p['id']]['status'] ?? 'empty';
                     ?>
-                    <li><strong><?php echo esc_html($p['title']); ?></strong> <span style="font-size:11px; color:#888;">(<?php echo ucfirst($status); ?>)</span></li>
+                    <li><strong><?php echo esc_html($p['title']); ?></strong> <span style="font-size:11px; color:#888;">(<?php echo esc_html(ucfirst((string) $status)); ?>)</span></li>
                     <?php endforeach; ?>
                 </ul>
 
@@ -187,6 +189,7 @@ class FCO_REST {
      * MASTER SYNC: Pages, Users, Identity, Taxonomies, Colors
      */
     public static function handle_full_sync_request($request) {
+        if (!self::check_sync_access($request)) return new WP_Error('forbidden', 'You do not have permission to synchronise this project.', ['status' => 403]);
         $project_id = (int) $request->get_param('project_id');
         if (!$project_id) return new WP_Error('no_pid', 'Missing project ID', ['status' => 400]);
 
@@ -199,7 +202,7 @@ class FCO_REST {
         ];
 
         // 1. SYNC BRANDING (Site Title/Tagline)
-        $branding = $data['branding'] ?? [];
+        $branding = (array) ($data['branding'] ?? []);
         if (!empty($branding['company_name'])) {
             update_option('blogname', sanitize_text_field($branding['company_name']));
             $report['settings_updated'][] = 'Site Title';
@@ -250,7 +253,7 @@ class FCO_REST {
 
         // 4. SYNC PAGES
         $pages = isset($data['pages']) ? $data['pages'] : [];
-        $drafts = isset($data['drafts']) ? $data['drafts'] : [];
+        $drafts = (array) ($data['drafts'] ?? []);
         
         usort($pages, function($a, $b) {
             if (empty($a['parent']) && !empty($b['parent'])) return -1;
@@ -314,12 +317,23 @@ class FCO_REST {
         return $count;
     }
 
+    public static function check_sync_access($request) {
+        return current_user_can('manage_options') && current_user_can('create_users')
+            && current_user_can('promote_users') && self::check_staff_project_access($request);
+    }
+
+    public static function check_staff_project_access($request) {
+        $pid = (int) $request->get_param('project_id');
+        return $pid > 0 && get_post_type($pid) === 'ink_onboard'
+            && get_post_status($pid) !== 'trash' && current_user_can('edit_post', $pid);
+    }
+
     private static function resolve_project_id($request) {
         $pid = (int) $request->get_param('project_id');
-        if ($pid && current_user_can('edit_pages')) return $pid;
+        if ($pid && self::check_staff_project_access($request)) return $pid;
 
         $token = $request->get_param('token') ?: $request->get_header('X-FCO-Token');
-        if ($token) {
+        if (is_string($token) && $token !== '') {
             $q = new WP_Query([
                 'post_type' => 'ink_onboard', 'posts_per_page' => 1,
                 'meta_query' => [['key' => 'ink_onboard_token', 'value' => sanitize_text_field($token)]],
@@ -331,12 +345,10 @@ class FCO_REST {
     }
 
     public static function check_read_access($request) {
-        if (is_user_logged_in() && current_user_can('edit_posts')) return true;
         return (bool) self::resolve_project_id($request);
     }
 
     public static function check_write_access($request) {
-        if (is_user_logged_in() && current_user_can('edit_posts')) return true;
         return (bool) self::resolve_project_id($request);
     }
 }

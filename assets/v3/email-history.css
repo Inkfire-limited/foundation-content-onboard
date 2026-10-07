@@ -1,0 +1,14 @@
+/* Staff-only email history, scoped to the onboarding project screen. */
+.fco-hub-admin .fco-admin-tabs{flex-wrap:wrap}
+.fco-hub-admin .fco-email-history{min-width:0}
+.fco-hub-admin .fco-email-history-scroll{max-width:100%;overflow-x:auto;margin-top:18px}
+.fco-hub-admin .fco-email-history-scroll:focus-visible{outline:3px solid currentColor;outline-offset:3px}
+.fco-hub-admin .fco-email-history table{min-width:600px}
+.fco-hub-admin .fco-email-history th,.fco-hub-admin .fco-email-history td{vertical-align:top;padding:12px;overflow-wrap:anywhere}
+.fco-hub-admin .fco-email-history td:first-child{min-width:125px}
+.fco-hub-admin .fco-email-history td:nth-child(2){min-width:160px}
+.fco-hub-admin .fco-email-history td small{display:block;margin-top:4px;line-height:1.5}
+.fco-hub-admin .fco-email-history .fco-badge{white-space:normal;text-align:left}
+.fco-hub-admin .fco-email-history-pagination{display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;margin-top:16px}
+.fco-hub-admin .fco-email-history-pagination .button{min-height:32px}
+.fco-hub-admin .fco-email-history-empty{padding:16px 0}

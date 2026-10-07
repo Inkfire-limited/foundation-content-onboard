@@ -3,7 +3,8 @@
  * Plugin Name: Foundation: Content Onboard
  * Plugin URI: https://github.com/Inkfire-limited/foundation-content-onboard
  * Description: Content onboarding portal. Admin editor + client wizard via token link.
- * Version: 2.4.4
+ * Version: 3.0.3
+ * Requires PHP: 8.0
  * Author: Sonny x Inkfire
  * Update URI: https://github.com/Inkfire-limited/foundation-content-onboard
  */
@@ -15,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 // -----------------------------------------------------------------------------
 // Constants
 // -----------------------------------------------------------------------------
-define( 'FCO_VERSION', '2.4.4' );
+define( 'FCO_VERSION', '3.0.3' );
 define( 'FCO_PLUGIN_FILE', __FILE__ );
 define( 'FCO_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'FCO_PLUGIN_URL', plugin_dir_url( __FILE__ ) );
@@ -62,9 +63,9 @@ function fco_require_file( $relative_path ) {
 // -----------------------------------------------------------------------------
 fco_require_file( 'includes/class-fco-github-updater.php' );
 fco_require_file( 'includes/class-fco-cpt.php' );
-fco_require_file( 'includes/class-fco-admin.php' );
-fco_require_file( 'includes/class-fco-frontend.php' );
-fco_require_file( 'includes/class-fco-rest.php' );
+// v3 owns the admin surface; the legacy source is retained for rollback only.
+// v3 owns the frontend surface; the legacy source is retained for rollback only.
+// v3 owns the rest surface; the legacy source is retained for rollback only.
 
 if ( class_exists( 'FCO_Github_Updater' ) && method_exists( 'FCO_Github_Updater', 'instance' ) ) {
 	FCO_Github_Updater::instance();
@@ -74,6 +75,7 @@ if ( class_exists( 'FCO_Github_Updater' ) && method_exists( 'FCO_Github_Updater'
 // Boot (your classes use static ::init() pattern, so call init, not new())
 // -----------------------------------------------------------------------------
 add_action( 'plugins_loaded', function () {
+    fco_require_file( 'includes/v3/bootstrap.php' );
 
     if ( class_exists( 'FCO_CPT' ) && method_exists( 'FCO_CPT', 'init' ) ) {
         FCO_CPT::init();

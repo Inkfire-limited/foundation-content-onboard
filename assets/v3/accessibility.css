@@ -1,0 +1,39 @@
+/* Onboarder-only keyboard and editor-dialog improvements. */
+:is(.fco-standalone,.fco-hub-admin) .fco-recovery{display:block}
+:is(.fco-standalone,.fco-hub-admin) .fco-recovery-detail{margin:10px 0;line-height:1.6}
+:is(.fco-standalone,.fco-hub-admin) .fco-recovery-reference{font-size:13px;overflow-wrap:anywhere;margin:8px 0}
+:is(.fco-standalone,.fco-hub-admin) .fco-recovery-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+:is(.fco-standalone,.fco-hub-admin) .fco-recovery-actions button{min-height:44px;white-space:normal;line-height:1.4;padding:10px 16px}
+:is(.fco-standalone,.fco-hub-admin) .fco-recovery [hidden]{display:none!important}
+:is(.fco-standalone,.fco-hub-admin) .fco-recovery button:focus-visible{outline:3px solid #f6bf87;outline-offset:3px}
+#fco-client-app .mce-toolbar button[data-fco-toolbar-control]:focus-visible{outline:3px solid #0e5b4e;outline-offset:-3px}
+@media(max-width:480px){:is(.fco-standalone,.fco-hub-admin) .fco-recovery-actions button{flex:1 1 150px}}
+.fco-link-dialog{box-sizing:border-box;width:min(600px,calc(100% - 24px));max-height:calc(100dvh - 32px);overflow:auto;padding:28px;border:1px solid #719a96;border-radius:22px;background:linear-gradient(140deg,#232637,#142f30);color:#f2f2f2;box-shadow:inset 0 1px 0 #ffffff26,0 22px 65px #0008;font:16px/1.6 Arial,Helvetica,sans-serif}
+.fco-link-dialog::backdrop{background:#0b0e1bcc;backdrop-filter:blur(5px)}
+.fco-link-head{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.fco-link-dialog h2{margin:0;color:inherit;font-size:24px;line-height:1.2}
+.fco-link-dialog p{font-size:14px;color:#dce5e4;margin:12px 0 18px}
+.fco-link-form>label:not(.fco-link-check){display:block;font-weight:700;margin:16px 0 6px}
+.fco-link-dialog input:not([type=checkbox]){box-sizing:border-box;width:100%;min-height:46px;border-radius:10px;padding:10px 12px;background:#f8faf9;color:#111827;border:2px solid #a0b9b5;font:inherit}
+.fco-link-dialog input::placeholder{color:#525b64;opacity:1}
+.fco-link-dialog button{min-height:44px;border-radius:12px;padding:10px 16px;line-height:1.35;background:#273d40;color:#fff;border:1px solid #9bb9b5;font:600 15px/1.35 Arial,Helvetica,sans-serif;cursor:pointer}
+.fco-link-dialog button[type=submit]{background:#0e5b4e;border-color:#83c8b5}
+.fco-link-dialog .fco-link-check{display:flex;align-items:center;gap:10px;margin:18px 0}
+.fco-link-dialog input[type=checkbox]{width:20px;height:20px;accent-color:#0e5b4e}
+.fco-link-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.fco-link-dialog #fco-link-error{color:#ffd3c7;font-weight:600}
+.fco-link-dialog :focus-visible,#fco-client-app :is(button,a,input,textarea,select,[contenteditable=true]):focus-visible{outline:3px solid #f6bf87;outline-offset:3px}
+#fco-client-app .fco-rich-link-action{margin:0 0 10px;min-height:44px}
+#fco-client-app .fco-a11y-only{position:absolute!important;width:1px!important;height:1px!important;padding:0!important;margin:-1px!important;overflow:hidden!important;clip-path:inset(50%)!important;white-space:nowrap!important;border:0!important}
+#fco-client-app h1.fco-wiz-steptitle{font:inherit;font-weight:700;line-height:1.4;margin:0;color:inherit}
+#fco-client-app .fco-node-actions,#fco-client-app .fco-pageactions{flex-wrap:wrap;gap:4px}
+#fco-client-app .fco-node:focus-within .fco-node-actions,#fco-client-app .fco-pageitem:focus-within .fco-pageactions{opacity:1;visibility:visible}
+#fco-client-app .fco-node-inner,#fco-client-app .fco-pageitem-inner{flex-wrap:wrap}
+#fco-client-app .fco-node-actions button,#fco-client-app .fco-pageactions button{min-width:32px;min-height:32px}
+#fco-client-app button.staff-thumb{cursor:pointer;position:relative;padding:0;min-width:52px;min-height:52px;border:1px solid #92aaa5;border-radius:12px;overflow:hidden;flex-shrink:0}
+#fco-client-app button.staff-thumb:not(:has(img)) .staff-overlay,#fco-client-app button.staff-thumb:focus-visible .staff-overlay{opacity:1}
+#fco-client-app button.fco-comments-toggle{width:100%;display:flex;justify-content:space-between;align-items:center;min-height:44px;text-align:left;cursor:pointer}
+#fco-client-app #fco-main-menu[hidden]{display:none!important}
+.fco-file-dialog :focus-visible{outline:3px solid #f6bf87;outline-offset:3px}
+@media(max-width:480px){.fco-link-dialog{padding:20px}.fco-link-actions button{flex:1 1 120px}#fco-client-app .fco-node-actions,#fco-client-app .fco-pageactions{width:100%;justify-content:flex-end}#fco-client-app .fco-node-actions button,#fco-client-app .fco-pageactions button{min-width:40px;min-height:40px}}
+@media(prefers-reduced-motion:reduce){.fco-link-dialog::backdrop{backdrop-filter:none}#fco-client-app .fco-a11y-only{animation:none!important}}

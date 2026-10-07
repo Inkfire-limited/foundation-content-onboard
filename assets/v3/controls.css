@@ -1,0 +1,80 @@
+/* Client action hierarchy only. Paint uses /branding's dark glass pill recipe
+   (0E6055, warm rim, inset reflection) and its Shadow Deep/Mid neutrals.
+   The existing orange-glass Help and rainbow welcome remain owned by hub.css. */
+.fco-standalone {
+  --fco-action-neutral: linear-gradient(180deg,rgba(255,255,255,.09),rgba(255,255,255,.025)),linear-gradient(115deg,#151622,#1c1d2d);
+  --fco-action-teal: linear-gradient(180deg,rgba(14,96,85,.85),rgba(14,96,85,.65));
+  --fco-action-shadow: 0 8px 18px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.12),inset 0 -1px 0 rgba(0,0,0,.24);
+}
+.fco-standalone #fco-client-app .fco-wizard-top-actions { flex:0 1 340px; width:100%; }
+.fco-standalone #fco-client-app .fco-wizard-top-actions .fco-step-picker-label { width:100%; max-width:none; }
+.fco-standalone #fco-client-app .fco-wizard-footer { justify-content:flex-end; align-items:center; gap:12px; }
+.fco-standalone #fco-client-app #wiz-back { margin-right:auto; }
+.fco-standalone #fco-client-app .fco-wizard-footer .fco-btn,
+.fco-standalone :is(.fco-sitebar,.fco-wizard-topbar) #fco-signout,
+.fco-standalone #fco-portal-project > .fco-project-strip:not(.fco-saved-preview-strip) > button {
+  box-sizing:border-box; display:inline-flex; align-items:center; justify-content:center;
+  min-height:48px; padding:11px 18px; margin-block:0; border-radius:999px;
+  font-family:inherit; font-size:16px; font-weight:650; line-height:1.35;
+  white-space:normal; text-align:center; border:1px solid rgba(255,255,255,.30);
+  background:var(--fco-action-neutral); color:#f2f2f2; box-shadow:var(--fco-action-shadow);
+  backdrop-filter:blur(5px); -webkit-backdrop-filter:blur(5px);
+  transition:background .2s ease,border-color .2s ease,box-shadow .2s ease;
+}
+.fco-standalone #fco-client-app #wiz-next { border-color:rgba(242,242,242,.70); }
+.fco-standalone #fco-client-app #wiz-skip { background:transparent; box-shadow:none; border-color:transparent; color:#d8d9e2; }
+.fco-standalone #fco-client-app .fco-wizard-footer .fco-btn:hover:not(:disabled),
+.fco-standalone :is(.fco-sitebar,.fco-wizard-topbar) #fco-signout:hover,
+.fco-standalone #fco-portal-project > .fco-project-strip:not(.fco-saved-preview-strip) > button:hover:not(:disabled) {
+  transform:none; background:linear-gradient(180deg,#303241,#1c1d2d); color:#f2f2f2;
+  border-color:rgba(251,204,191,.65); box-shadow:var(--fco-action-shadow);
+}
+.fco-standalone #fco-portal-project #fco-submit-project {
+  background:var(--fco-action-teal); color:#fff; border:1px solid rgba(241,142,92,.45);
+  box-shadow:var(--fco-action-shadow); backdrop-filter:blur(5px); -webkit-backdrop-filter:blur(5px);
+}
+.fco-standalone #fco-portal-project #fco-submit-project:hover:not(:disabled) {
+  background:linear-gradient(180deg,#0e6055,rgba(14,96,85,.9)); color:#fff;
+  border-color:rgba(241,142,92,.8); box-shadow:0 12px 22px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.15);
+}
+.fco-standalone #fco-client-app.mode-start #btn-begin {
+  background:#fff; color:#000; border:1px solid rgba(241,142,92,.45);
+  box-shadow:var(--fco-action-shadow); backdrop-filter:blur(5px); -webkit-backdrop-filter:blur(5px);
+}
+.fco-standalone #fco-client-app.mode-start #btn-begin:hover {
+  background:#fff; color:#000;
+  border-color:rgba(241,142,92,.8); box-shadow:0 12px 22px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.15);
+}
+.fco-standalone #fco-portal-project > .fco-project-strip:not(.fco-saved-preview-strip) {
+  min-height:72px; margin-block:16px 0; padding-block:12px; gap:12px; align-items:center;
+}
+.fco-standalone #fco-portal-project > .fco-project-strip:not(.fco-saved-preview-strip) > .fco-hub-save { flex:1 1 180px; min-width:0; overflow-wrap:anywhere; }
+.fco-standalone #fco-client-app .fco-wizard-footer .fco-btn:focus-visible,
+.fco-standalone :is(.fco-sitebar,.fco-wizard-topbar) #fco-signout:focus-visible,
+.fco-standalone #fco-portal-project > .fco-project-strip > button:focus-visible {
+  outline:3px solid #fbccbf; outline-offset:3px;
+}
+.fco-standalone #fco-client-app .fco-wizard-footer .fco-btn:disabled { opacity:.45; box-shadow:none; cursor:not-allowed; }
+@media(max-width:780px) {
+  .fco-standalone #fco-client-app .fco-wizard-top-actions { flex-basis:100%; }
+  .fco-standalone #fco-portal-project > .fco-project-strip:not(.fco-saved-preview-strip) > .fco-hub-save { flex-basis:100%; }
+  .fco-standalone #fco-portal-project > .fco-project-strip:not(.fco-saved-preview-strip) > button { flex:1 1 170px; }
+}
+@media(max-width:480px) {
+  .fco-standalone :is(.fco-sitebar,.fco-wizard-topbar) :is(#fco-help-open,#fco-signout) { min-height:48px; padding:10px 12px; font-size:14px; }
+  .fco-standalone #fco-client-app .fco-wizard-footer { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+  .fco-standalone #fco-client-app #wiz-back { grid-column:1; grid-row:1; margin:0; width:100%; }
+  .fco-standalone #fco-client-app #wiz-next { grid-column:2; grid-row:1; width:100%; padding-inline:10px; }
+  .fco-standalone #fco-client-app #wiz-skip { grid-column:1 / -1; grid-row:2; justify-self:center; }
+}
+@media(prefers-reduced-motion:reduce) {
+  .fco-standalone #fco-client-app .fco-btn,.fco-standalone .fco-project-strip > button,.fco-standalone .fco-sitebar button { transition:none; }
+}
+@media(forced-colors:active) {
+  .fco-standalone #fco-client-app .fco-wizard-footer .fco-btn,
+  .fco-standalone #fco-client-app.mode-start #btn-begin,
+  .fco-standalone :is(.fco-sitebar,.fco-wizard-topbar) #fco-signout,
+  .fco-standalone #fco-portal-project > .fco-project-strip > button {
+    background:ButtonFace!important; color:ButtonText!important; border-color:ButtonText!important; box-shadow:none!important;
+  }
+}
