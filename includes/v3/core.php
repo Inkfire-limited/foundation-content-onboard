@@ -514,9 +514,10 @@ final class FCO_Hub {
         return $data;
     }
     public static function save($request) {
-        // Correlate a failed save without recording its content, token, cookie or email.
+        // Answers live only in the encrypted private journal, never general error logs.
         $reference = 'FCO-SAVE-' . strtoupper(substr(str_replace('-', '', wp_generate_uuid4()), 0, 12));
-        $exception = null;
+        $exception = null; $attempt = false;
+        try { $attempt = FCO_Hub_Save_Recovery::begin($request, $reference); } catch (Throwable $ignored) {}
         try { $result = self::save_checked($request); }
         catch (Throwable $error) {
             $exception = ['class'=>get_class($error),'file'=>basename($error->getFile()),'line'=>$error->getLine()];
@@ -528,7 +529,8 @@ final class FCO_Hub {
             if ((int)($details['status'] ?? 500) >= 500) {
                 error_log('[FCO save] ' . wp_json_encode(['at'=>gmdate('c'),'request_id'=>$reference,'project_id'=>absint($request->get_param('project_id')),'status'=>(int)($details['status'] ?? 500),'code'=>$result->get_error_code(),'exception'=>$exception]));
             }
-        } elseif (is_array($result)) { $result['request_id'] = $reference; }
+        } elseif (is_array($result)) { $result['request_id'] = $reference; $result['recovery_recorded'] = (bool)$attempt; }
+        try { FCO_Hub_Save_Recovery::finish($attempt, $result); } catch (Throwable $ignored) {}
         return $result;
     }
     private static function normalize_provenance($incoming, $current, $manager) {
