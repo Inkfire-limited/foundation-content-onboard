@@ -45,7 +45,8 @@ final class FCO_Hub_UI {
         if ($admin) { wp_enqueue_style('fco-email-history-css',self::asset_url('assets/v3/email-history.css'),['fco-workflows-css'],FCO_VERSION); }
         wp_enqueue_script('fco-client-js',self::asset_url('assets/client.js'),['jquery','jquery-ui-sortable'],FCO_VERSION,true);
         wp_localize_script('fco-client-js','FCO_Config',array_merge(self::config($admin),$preview_id ? ['previewOnly'=>true,'previewProject'=>$preview_id,'previewNonce'=>wp_create_nonce('wp_rest')] : []));
-        wp_enqueue_script('fco-hub-bridge',self::asset_url('assets/v3/bridge.js'),['fco-client-js'],FCO_VERSION,true);
+        wp_enqueue_script('fco-save-recovery',self::asset_url('assets/v3/save-recovery.js'),['fco-client-js'],FCO_VERSION,true);
+        wp_enqueue_script('fco-hub-bridge',self::asset_url('assets/v3/bridge.js'),['fco-save-recovery'],FCO_VERSION,true);
         wp_enqueue_script('fco-editor-accessibility',self::asset_url('assets/v3/editor-accessibility.js'),['fco-hub-bridge'],FCO_VERSION,true);
         wp_enqueue_script('fco-review-fixes',self::asset_url('assets/v3/review-fixes.js'),['fco-editor-accessibility'],FCO_VERSION,true);
         wp_enqueue_style('fco-review-fixes-css',self::asset_url('assets/v3/review-fixes.css'),['fco-accessibility-css'],FCO_VERSION);

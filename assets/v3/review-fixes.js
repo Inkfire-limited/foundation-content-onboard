@@ -38,6 +38,7 @@ A.renderAnswerReview=function($input,steps,goTo){
  const visible=steps.filter(s=>!['outro','brand_summary'].includes(s.id)&&s.type!=='build_page_steps'&&(!s.when||s.when()));
  const get=target=>target?.split('.').reduce((v,k)=>v?.[k],d);
  function answer(s){
+  if(s.type==='extra_question')return valueHTML(p.extra_question_answers?.[s.question?.id]);
   if(s.type==='grouped_fields')return s.fields.map(f=>{const value=valueHTML(get(f.target));return value?`<div><strong>${esc(f.label)}:</strong> ${value}</div>`:'';}).join('');
   if(s.type==='setup_fields')return s.fields.map(([key,label])=>p[key]?`<div><strong>${esc(label)}:</strong> ${valueHTML(p[key])}</div>`:'').join('');
   if(s.id==='blog_toggle')return valueHTML(p.has_blog)+(p.has_blog?valueHTML(b.blog_categories):'');

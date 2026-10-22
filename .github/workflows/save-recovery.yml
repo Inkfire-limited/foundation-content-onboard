@@ -1,0 +1,22 @@
+name: Save recovery regression
+on:
+  pull_request:
+  push:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  recovery:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: actions/setup-node@v7.1.0
+        with:
+          node-version: '24'
+          cache: npm
+      - run: npm ci --ignore-scripts
+      - run: npm test
+      - name: Check browser scripts
+        run: find assets -name '*.js' -print0 | xargs -0 -n1 node --check
+      - name: Check plugin PHP
+        run: find includes -name '*.php' -print0 | xargs -0 -n1 php -l

@@ -2,9 +2,9 @@
 Contributors: inkfire
 Tags: onboarding, content, client portal, editorial workflow
 Requires at least: 6.0
-Tested up to: 6.9
-Requires PHP: 7.4
-Stable tag: 3.0.3
+Tested up to: 7.1
+Requires PHP: 8.0
+Stable tag: 3.0.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -21,6 +21,11 @@ Foundation: Content Onboard helps teams collect and manage client content throug
 3. Open the Foundation content onboarding tools in wp-admin.
 
 == Changelog ==
+
+= 3.0.4 =
+* Preserve project-specific answers through saving, reloading, review and export.
+* Keep browser recovery copies and encrypted staff-only save-attempt records, including rejected saves.
+* Retain up to 50 server attempts per project for 14 days; never restore over live answers automatically.
 
 = 3.0.3 =
 * Preserve the production V3 portal, named collaborators, concurrent sessions, presence, revision conflict protection, invitation controls, private files, lifecycle and developer brief tooling.

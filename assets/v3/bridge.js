@@ -2,6 +2,7 @@
 'use strict';
 const C=window.FCO_Config, A=window.FCO_App;
 if(!C || !A || !C.hub) return;
+const R=window.FCO_SaveRecovery;
 const B=window.FCO_HubBridge={revision:0,csrf:'',dirty:false,saving:null,wanted:false,conflict:false,accessRequired:false,accessMessage:'',recoveryFocus:null,assets:[],context:{}};
 const esc=(s)=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[c]));
 B.escape=esc;
@@ -24,17 +25,20 @@ A.saveData=function(){
  if(B.saving)return B.saving;
  B.saving=(async()=>{
    try{
-    while(B.wanted){B.wanted=false;B.state('saving');const snapshot=JSON.parse(JSON.stringify(A.data));delete snapshot._hub;
-     const result=await B.request('/project/save','POST',{project_id:C.projectId,revision:B.revision,data:snapshot},true);B.revision=Number(result.revision);B.submission=result.submission||B.submission;
-     const current=JSON.parse(JSON.stringify(A.data));delete current._hub;if(JSON.stringify(snapshot)!==JSON.stringify(current))B.wanted=true;
+    while(B.wanted){B.wanted=false;B.state('saving');const snapshot=R.snapshot(A.data),attempt=R.id();
+     const browserCopy=await R.checkpoint(snapshot,{revision:B.revision,request_id:attempt});
+     const result=await B.request('/project/save','POST',{project_id:C.projectId,revision:B.revision,client_save_id:attempt,data:snapshot},true);B.revision=Number(result.revision);B.submission=result.submission||B.submission;
+     await R.confirm(snapshot,attempt,result.request_id);
+     if(!browserCopy&&!result.recovery_recorded)B.notice('Your answers saved, but recovery storage is unavailable. Download a copy for safekeeping.',true);
+     const current=R.snapshot(A.data);if(JSON.stringify(snapshot)!==JSON.stringify(current))B.wanted=true;
     }
     B.dirty=false;B.state('saved');B.clearRecovery();return true;
-   }catch(e){B.dirty=true;B.wanted=false;B.conflict=e.code==='fco_conflict';B.accessRequired=!C.isAdmin&&!C.previewOnly&&['fco_session_required','fco_session_stale'].includes(e.code);B.accessMessage='';B.recovery(e);B.state(B.conflict?'conflict':B.accessRequired?'access':'error');B.notice(e.message,true);return false;}
+   }catch(e){R.checkpoint(A.data,{revision:B.revision,status:'failed',request_id:e.requestId,error_code:e.code||'network_error'});B.dirty=true;B.wanted=false;B.conflict=e.code==='fco_conflict';B.accessRequired=!C.isAdmin&&!C.previewOnly&&['fco_session_required','fco_session_stale'].includes(e.code);B.accessMessage='';B.recovery(e);B.state(B.conflict?'conflict':B.accessRequired?'access':'error');B.notice(e.message,true);return false;}
    finally{B.saving=null;}
  })();return B.saving;
 };
-A.debouncedSave=function(){B.dirty=true;clearTimeout(A.saveTimer);if(B.conflict||B.accessRequired){B.state(B.conflict?'conflict':'access');return;}B.state('dirty');A.saveTimer=setTimeout(()=>A.saveData(),650);};
-B.downloadJSON=function(data,name){const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),30000);};
+A.debouncedSave=function(){R.checkpoint(A.data,{revision:B.revision});B.dirty=true;clearTimeout(A.saveTimer);if(B.conflict||B.accessRequired){B.state(B.conflict?'conflict':'access');return;}B.state('dirty');A.saveTimer=setTimeout(()=>A.saveData(),650);};
+B.downloadJSON=function(data,name){const url=URL.createObjectURL(new Blob([JSON.stringify(R.snapshot(data),null,2)],{type:'application/json'}));const a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),30000);};
 // Remember focus before disabling a native button: disabling it can move focus to BODY.
 B.clearRecovery=function(){
  const bar=document.getElementById('fco-recovery');if(!bar)return;
@@ -98,7 +102,7 @@ A.syncToWpDraftPages=function(){B.notice('Use the Connection panel to review and
 A.sendEmailSummary=function(){B.notice('Invitations and review status are managed from the project dashboard.');};
 
 const originalLoad=A.loadProject.bind(A);
-A.loadProject=async function(){await originalLoad();if(!A.data)return;A.wizardState={};if(Array.isArray(A.data.comments))A.data.comments={...A.data.comments};B.dirty=false;B.state('saved');};
+A.loadProject=async function(){await originalLoad();if(!A.data)return;A.wizardState={};if(Array.isArray(A.data.comments))A.data.comments={...A.data.comments};B.dirty=false;B.state('saved');R.offer();};
 A.renderStart=function($el){const m=B.context;const name=m.contact_name||C.user.name||'your team';const client=m.client_name||A.data.branding.company_name||'your project';const resuming=!!A.data.project.wizard_step&&!['intro','site_name'].includes(A.data.project.wizard_step);$el.html(`<div class="fco-start-hero"><div class="fco-start-kicker">Welcome, ${esc(name)}</div>${m.logo_url?`<img class="fco-client-logo" src="${esc(m.logo_url)}" alt="${esc(client)} logo">`:''}<h1 class="fco-start-title">Let’s build<br>${esc(client)}.</h1><p class="fco-start-sub">${esc(m.welcome||'Bring your content, images and ideas together. Work at your own pace, and come back whenever you are ready.')}</p><div class="fco-start-actions"><button class="fco-btn primary large" id="btn-begin">${resuming?'Continue onboarding':'Start onboarding'} →</button><button class="fco-btn ghost large" id="btn-skip">Open content dashboard</button></div><p class="fco-welcome-footnote">Your progress saves to this project, not just this device.</p></div>`);$('#btn-begin').on('click',()=>A.switchMode('wizard'));$('#btn-skip').on('click',()=>A.switchMode('editor'));};
 const originalEditor=A.renderEditor.bind(A);
 A.renderEditor=function($el){originalEditor($el);$('#btn-sync-pages').text('Review delivery');$('#btn-email-summary').hide();if(B.context.logo_url)$el.find('.fco-logo-mark img').attr({src:B.context.logo_url,alt:(B.context.client_name||'Client')+' logo'});B.state(B.conflict?'conflict':B.accessRequired?'access':B.dirty?'dirty':'saved');};

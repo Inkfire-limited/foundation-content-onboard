@@ -1,0 +1,6 @@
+{
+  "name": "foundation-content-onboard-tests",
+  "private": true,
+  "scripts": {"test": "node --test tests/save-recovery.test.cjs"},
+  "devDependencies": {"fake-indexeddb": "6.2.6"}
+}

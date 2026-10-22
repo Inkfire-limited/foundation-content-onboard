@@ -1342,7 +1342,7 @@
         {id:'launch_plan',type:'setup_fields',title:'Launch & handover',text:'Let’s plan your launch and handover.',fields:[['launch_date','Target date and key milestones','Tell us about fixed events or deadlines.'],['approvals','Who approves content and launch?','Names or roles and how decisions are made.'],['aftercare','Ongoing maintenance and handover','Updates, backups, monitoring, training, analytics and reporting.']]}
       ]);
       const extraQuestions = Array.isArray(this.data.project.extra_questions) ? this.data.project.extra_questions : [];
-      this.data.project.extra_question_answers = (this.data.project.extra_question_answers && typeof this.data.project.extra_question_answers === "object") ? this.data.project.extra_question_answers : {};
+      this.data.project.extra_question_answers = (this.data.project.extra_question_answers && typeof this.data.project.extra_question_answers === "object") ? Object.assign({}, this.data.project.extra_question_answers) : {};
       const extraQuestionSteps = extraQuestions.map(q => ({
         id: "extra_" + q.id,
         type: "extra_question",
