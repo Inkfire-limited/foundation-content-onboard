@@ -179,3 +179,16 @@
 .fco-standalone #fco-presence{max-width:100%;min-width:0;flex:0 1 auto}.fco-presence{display:inline-flex;align-items:center;gap:7px;max-width:230px;min-height:30px;padding:5px 10px;border:1px solid rgba(138,219,208,.28);border-radius:999px;background:rgba(138,219,208,.08);color:#dff9f4;font-size:12px;font-weight:650;line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.fco-presence::before{content:"";width:7px;height:7px;flex:0 0 7px;border-radius:50%;background:#5fd0ad;box-shadow:0 0 0 3px rgba(95,208,173,.12)}
 @media(max-width:780px){.fco-collaborator-row{grid-template-columns:1fr}.fco-collaborator-row .fco-button-danger{justify-self:start}.fco-presence{max-width:105px;padding:5px 8px;font-size:11px}}
 @media(forced-colors:active){.fco-presence{background:Canvas;color:CanvasText;border-color:CanvasText}.fco-presence::before{background:Highlight;box-shadow:none}}
+/* Admin previews need an opaque base beneath the client wizard's glass surfaces. */
+.fco-hub-admin #fco-client-app.mode-wizard {
+  background-color: #151622;
+  color-scheme: dark;
+}
+
+/* This status sits outside the dark app, on the light WordPress admin surface. */
+.fco-hub-admin #fco-editor-panel > .fco-hub-save { color: #176449; }
+.fco-hub-admin #fco-editor-panel > .fco-hub-save.is-error { color: #a12622; }
+
+/* Review cards contain long answers, rather than centred question prompts. */
+.fco-hub-admin #fco-client-app .fco-answer-review .fco-guided-card { text-align: left; }
+.fco-hub-admin #fco-client-app .fco-review-answer { font-size: 16px; }
