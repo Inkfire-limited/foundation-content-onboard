@@ -44,10 +44,11 @@ final class FCO_Hub_Brief {
     public static function view($r) {
         $id=absint($r['id']);if (!FCO_Hub::valid_project($id))return FCO_Hub::error('Project not found.',404);
         $row=FCO_Hub::row($id);$context=self::context($id,$row['revision']);
-        return ['html'=>Inkfire_Onboarding_Brief::body(json_decode($row['payload'],true),$context,self::files($id)),'revision'=>(int)$row['revision'],'pdf_url'=>add_query_arg('_wpnonce',wp_create_nonce('fco_brief_'.$id),admin_url('admin-post.php?action=fco_developer_brief&project_id='.$id))];
+        $data=json_decode($row['payload'],true);$files=self::files($id);
+        return ['html'=>Inkfire_Onboarding_Brief::body($data,$context,$files),'summary'=>Inkfire_Onboarding_Brief::summary($data,$files),'saved_at'=>$row['updated_at'].'Z','revision'=>(int)$row['revision'],'pdf_url'=>add_query_arg('_wpnonce',wp_create_nonce('fco_brief_'.$id),admin_url('admin-post.php?action=fco_developer_brief&project_id='.$id))];
     }
     public static function files($id) {
-        return array_map(function($a){return array_intersect_key($a,array_flip(['uuid','filename','mime','size','alt','caption','send_to_build','url','checksum']));},FCO_Hub_Assets::listing_for($id));
+        return array_map(function($a){return array_intersect_key($a,array_flip(['uuid','filename','mime','size','alt','caption','purpose','send_to_build','url','checksum']));},FCO_Hub_Assets::listing_for($id));
     }
     public static function download() {
         if (!FCO_Hub::manager())wp_die('Not authorised.',403);

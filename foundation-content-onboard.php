@@ -3,7 +3,7 @@
  * Plugin Name: Foundation: Content Onboard
  * Plugin URI: https://github.com/Inkfire-limited/foundation-content-onboard
  * Description: Content onboarding portal. Admin editor + client wizard via token link.
- * Version: 3.0.5
+ * Version: 3.0.6
  * Requires PHP: 8.0
  * Author: Sonny x Inkfire
  * Update URI: https://github.com/Inkfire-limited/foundation-content-onboard
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 // -----------------------------------------------------------------------------
 // Constants
 // -----------------------------------------------------------------------------
-define( 'FCO_VERSION', '3.0.5' );
+define( 'FCO_VERSION', '3.0.6' );
 define( 'FCO_PLUGIN_FILE', __FILE__ );
 define( 'FCO_PLUGIN_DIR', plugin_dir_path( __FILE__ ) );
 define( 'FCO_PLUGIN_URL', plugin_dir_url( __FILE__ ) );

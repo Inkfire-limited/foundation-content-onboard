@@ -1,0 +1,38 @@
+/* Staff review stays on a readable light surface, separate from the client editor. */
+.fco-hub-admin :is(#fco-project-detail,#fco-detail-body,.fco-admin-card,.fco-admin-form){min-width:0}
+.fco-hub-admin .fco-detail-meta{flex-direction:row;flex-wrap:wrap;justify-content:flex-end;align-items:center;gap:8px;max-width:620px}
+.fco-hub-admin .fco-review-intro{display:flex;flex-wrap:wrap;justify-content:space-between;gap:20px;align-items:start}
+.fco-hub-admin .fco-review-intro>div:first-child{flex:1 1 460px;min-width:0}
+.fco-hub-admin .fco-review-intro h3{font-size:25px;line-height:1.3;margin:6px 0 12px;color:#151622}
+.fco-hub-admin .fco-review-eyebrow{font-size:12px;font-weight:750;letter-spacing:.06em;color:#176449;margin:0}
+.fco-hub-admin .fco-review-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:start}
+.fco-hub-admin .fco-review-actions .button{min-height:40px;white-space:normal}
+.fco-hub-admin .fco-review-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:22px 0}
+.fco-hub-admin .fco-review-summary>div{padding:16px;background:#f3f7f5;border:1px solid #d8e3de;border-radius:12px;min-width:0}
+.fco-hub-admin .fco-review-summary strong{display:block;font-size:24px;line-height:1.3;color:#163b30}
+.fco-hub-admin .fco-review-summary span{display:block;margin-top:5px;font-size:14px;line-height:1.5}
+.fco-hub-admin :is(.fco-review-caution,.fco-before-handoff){padding:18px;border:1px solid #dac795;border-left:4px solid #98701a;background:#fffbef;border-radius:10px;margin:18px 0}
+.fco-hub-admin :is(.fco-review-caution,.fco-before-handoff) p{font-size:15px;line-height:1.65;margin:8px 0}
+.fco-hub-admin .fco-brief-tools{display:grid;grid-template-columns:minmax(180px,1.4fr) minmax(180px,1fr) auto;gap:12px;align-items:end;background:#f4f7f6;border:1px solid #d8e3de;padding:16px;border-radius:12px;margin:24px 0}
+.fco-hub-admin .fco-brief-tools label{min-width:0;font-weight:650;font-size:14px}
+.fco-hub-admin .fco-brief-tools :is(input,select){width:100%;max-width:100%;min-height:44px;margin:7px 0 0;font-size:15px}
+.fco-hub-admin .fco-brief-tools>p{grid-column:1/-1;margin:0}
+.fco-hub-admin .fco-brief-tools .button{min-height:44px;white-space:normal}
+.fco-hub-admin .fco-brief-document .inkfire-brief{max-width:100%;padding:0;background:#fff;color:#151622;line-height:1.65}
+.fco-hub-admin .fco-brief-document .inkfire-brief>h1{font-size:30px;line-height:1.25}
+.fco-hub-admin .fco-brief-document .inkfire-brief>section{padding:22px 0;border-top:1px solid #dfe5e2;scroll-margin-top:32px}
+.fco-hub-admin .fco-brief-document .inkfire-brief :is(h2,h3){color:#151622;line-height:1.4;overflow-wrap:anywhere}
+.fco-hub-admin .fco-brief-document .inkfire-brief h2{font-size:22px;margin:0 0 20px;border:0;padding:0}
+.fco-hub-admin .fco-brief-document .inkfire-brief .record-heading{font-size:17px;margin:16px 0 7px}
+.fco-hub-admin .fco-brief-document .inkfire-brief .answer{font-size:16px;line-height:1.75;white-space:normal;overflow-wrap:anywhere;margin:6px 0 14px;color:#20252a}
+.fco-hub-admin .fco-brief-document .inkfire-brief .record .record{border-left:2px solid #e0e7e3;padding-left:16px;margin:10px 0 18px}
+.fco-hub-admin .fco-brief-document .inkfire-brief .notice{margin:16px 0;padding:16px;border:1px solid #dce5df;border-left:4px solid #176449;box-shadow:none;font-size:15px}
+.fco-hub-admin .fco-brief-document .inkfire-brief .empty{font-size:15px;color:#555f67}
+.fco-hub-admin :is(.fco-brief-technical,.fco-brief-email,.fco-provenance-details){border:1px solid #dce5df;border-radius:10px;margin:18px 0;padding:16px}
+.fco-hub-admin :is(.fco-brief-technical,.fco-brief-email,.fco-provenance-details)>summary{font-size:16px;font-weight:700;cursor:pointer;color:#173e30;line-height:1.5}
+.fco-hub-admin .fco-brief-email form{margin-top:18px;max-width:640px}
+.fco-hub-admin .fco-asset-admin>img{width:110px;height:110px;max-width:100%;max-height:110px;object-fit:contain;border:1px solid #b7c2ca;background-color:#77818b;background-image:conic-gradient(#dbe1e8 25%,transparent 0 50%,#dbe1e8 0 75%,transparent 0);background-size:24px 24px;padding:10px}
+.fco-hub-admin .fco-asset-admin>div{min-width:0;overflow-wrap:anywhere}
+.fco-hub-admin :is(.fco-developer-review,.fco-before-handoff) :focus-visible{outline:3px solid #235cda;outline-offset:3px}
+@media(max-width:1100px){.fco-hub-admin .fco-brief-tools{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}.fco-hub-admin .fco-brief-tools>.button{justify-self:start}}
+@media(max-width:780px){.fco-hub-admin .fco-review-summary,.fco-hub-admin .fco-brief-tools{grid-template-columns:minmax(0,1fr)}.fco-hub-admin .fco-review-intro h3{font-size:23px}.fco-hub-admin .fco-review-actions{width:100%}.fco-hub-admin .fco-review-actions>.button{flex:1 1 180px}.fco-hub-admin .fco-brief-document .inkfire-brief .record .record{padding-left:10px}}

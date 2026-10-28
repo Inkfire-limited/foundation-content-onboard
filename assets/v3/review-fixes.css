@@ -77,3 +77,19 @@
  .fco-standalone #fco-client-app .fco-strip-inputs {max-width:none}
  .fco-standalone #fco-client-app .fco-add-strip {min-height:64px}
 }
+
+/* Page actions get a separate row; hidden controls must not squeeze the title. */
+:is(.fco-standalone,.fco-hub-admin) #fco-client-app .fco-node-inner {grid-template-columns:20px minmax(0,1fr) auto;align-items:start;gap:8px;padding:10px}
+:is(.fco-standalone,.fco-hub-admin) #fco-client-app .fco-node-title {white-space:normal;overflow-wrap:anywhere;font-size:16px;line-height:1.5;padding:2px 4px}
+:is(.fco-standalone,.fco-hub-admin) #fco-client-app .fco-node-chip {align-self:start;white-space:nowrap;line-height:1.5;padding:4px 7px}
+:is(.fco-standalone,.fco-hub-admin) #fco-client-app .fco-node-actions {display:flex;grid-column:2/-1;opacity:1;pointer-events:auto;flex-wrap:wrap;min-width:0;justify-content:flex-start}
+:is(.fco-standalone,.fco-hub-admin) #fco-client-app .fco-node-actions .fco-mini {width:36px;height:36px;min-width:36px}
+/* All brand colours remain visible, including the add control. */
+:is(.fco-standalone,.fco-hub-admin) #fco-client-app .fco-palette-stage {display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr));height:auto;min-height:0;gap:12px}
+:is(.fco-standalone,.fco-hub-admin) #fco-client-app .fco-palette-strip {display:grid;grid-template-columns:minmax(0,1fr) 36px;gap:8px;min-width:0;width:100%;height:auto;min-height:130px;padding:14px}
+:is(.fco-standalone,.fco-hub-admin) #fco-client-app .fco-palette-strip:hover {flex:none}
+:is(.fco-standalone,.fco-hub-admin) #fco-client-app .fco-strip-inputs {grid-column:1;grid-row:1;min-width:0;width:100%;max-width:none;padding:0;opacity:1}
+:is(.fco-standalone,.fco-hub-admin) #fco-client-app .fco-strip-actions {position:static;grid-column:2;grid-row:1;align-self:center;opacity:1}
+:is(.fco-standalone,.fco-hub-admin) #fco-client-app .fco-add-strip {min-width:0;min-height:80px;width:100%}
+:is(.fco-standalone,.fco-hub-admin) #fco-client-app :is(#wiz-mediagrid,#dash-mediagrid) .fco-media-item>img {background-color:#77818b;background-image:conic-gradient(#dbe1e8 25%,transparent 0 50%,#dbe1e8 0 75%,transparent 0);background-size:24px 24px}
+@media(max-width:780px){:is(.fco-standalone,.fco-hub-admin) #fco-client-app .fco-node-actions .fco-mini {width:44px;height:44px;min-width:44px}}
