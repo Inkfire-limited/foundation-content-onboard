@@ -55,6 +55,21 @@ final class Inkfire_Onboarding_Brief {
             }
             $sections[$title]=$rows;
         }
+        $questions=(array)($data['project']['extra_questions']??[]);
+        $answers=(array)($data['project']['extra_question_answers']??[]);
+        if ($questions) {
+            $rows=[];
+            foreach ($questions as $index=>$question) {
+                if (!is_array($question)) continue;
+                $id=(string)($question['id']??'');
+                $title=trim((string)($question['title']??'')) ?: 'Project question';
+                $rows[($index+1).'. '.$title]=array_key_exists($id,$answers)?$answers[$id]:null;
+                unset($answers[$id]);
+            }
+            $sections['Project-specific questions & answers']=$rows;
+            unset($remaining['project']['extra_questions'],$remaining['project']['extra_question_answers']);
+            if ($answers) $sections['Retained answers to earlier project questions']=$answers;
+        }
         $pages=[];
         foreach (($data['pages']??[]) as $page) {
             $id=$page['id']??'';$entry=['Page structure'=>$page,'Page details'=>$data['drafts'][$id]??[],'Page copy & images'=>$data['drafts'][$id.'::main']??[],'Discussion'=>$data['comments'][$id]??[]];
@@ -75,15 +90,39 @@ final class Inkfire_Onboarding_Brief {
         foreach ($remaining as $key=>$value) if ($value!==[] && $value!==null && $value!=='') $sections['Additional saved information'][self::label($key)]=$value;
         return $sections;
     }
+    public static function summary($data,$files=[]) {
+        $questions=(array)($data['project']['extra_questions']??[]);
+        $answers=(array)($data['project']['extra_question_answers']??[]);
+        $has_answer=static function($value) {
+            if (is_array($value)) return count($value)>0;
+            return $value!==null && (is_bool($value) || trim((string)$value)!=='');
+        };
+        $answered=0;
+        foreach ($questions as $question) {
+            $id=(string)($question['id']??'');
+            if (array_key_exists($id,$answers) && $has_answer($answers[$id])) $answered++;
+        }
+        $pages=(array)($data['pages']??[]);$with_copy=0;
+        foreach ($pages as $page) {
+            $id=$page['id']??'';
+            $copy=($data['drafts'][$id]['content']??'').' '.($data['drafts'][$id.'::main']['content']??'');
+            if (preg_replace('/[\s\x{00a0}]+/u','',self::text($copy))!=='') $with_copy++;
+        }
+        return ['questions_total'=>count($questions),'questions_answered'=>$answered,'questions_unanswered'=>count($questions)-$answered,
+            'pages_total'=>count($pages),'pages_with_copy'=>$with_copy,'pages_without_copy'=>count($pages)-$with_copy,
+            'files_total'=>count($files),'files_approved'=>count(array_filter($files,static fn($file)=>!empty($file['send_to_build'])))];
+    }
     public static function body($data,$context=[],$files=[]) {
         $html='<article class="inkfire-brief"><p class="eyebrow">INKFIRE · DEVELOPER HANDOVER</p><h1>'.esc_html($context['client_name']??'Website project').'</h1><p>Revision '.esc_html($context['revision']??'—').' · '.esc_html($context['generated_at']??gmdate('c')).'</p>';
         $html.='<p class="notice">Private project brief. Client requests are not automatically approved scope. Missing answers and skipped sections need review. Imported pages remain drafts. Accounts, branding and notification email require separate approval; payments, plugins, DNS and integrations are not configured automatically.</p>';
         if (!empty($context['contact_name'])) $html.='<p><strong>Client contact:</strong> '.esc_html($context['contact_name']).'</p>';
         if (!empty($context['email'])) $html.='<p><strong>Contact email:</strong> '.esc_html($context['email']).'</p>';
         $sections=self::sections($data,$files);$html.='<h2>Contents</h2><ol>';
-        foreach ($sections as $name=>$rows) $html.='<li>'.esc_html($name).'</li>';
+        $index=0;
+        foreach ($sections as $name=>$rows) $html.='<li><a href="#inkfire-brief-section-'.(++$index).'">'.esc_html($name).'</a></li>';
         $html.='</ol>';
-        foreach ($sections as $name=>$rows) $html.='<section><h2>'.esc_html($name).'</h2>'.self::value($rows).'</section>';
+        $index=0;
+        foreach ($sections as $name=>$rows) $html.='<section id="inkfire-brief-section-'.(++$index).'"><h2>'.esc_html($name).'</h2>'.self::value($rows).'</section>';
         return $html.'</article>';
     }
     public static function css() { return 'body{font-family:"DejaVu Sans",sans-serif;font-size:10pt;line-height:1.45;color:#151622;background:#fff;margin:0}.inkfire-brief{max-width:960px;margin:auto;padding:24px}.eyebrow{font-size:9pt;font-weight:bold;letter-spacing:1px;color:#0e5b4e}h1{font-size:25pt;line-height:1.15;margin:6px 0 14px}h2{font-size:15pt;border-bottom:2px solid #fbccbf;padding-bottom:7px;margin-top:28px;page-break-after:avoid}.notice{padding:12px;background:#f4f4f6;border-left:4px solid #0e5b4e}.record-heading{font-size:10pt;margin:6px 0 3px;page-break-after:avoid}.field{margin:6px 0}.field>strong{font-size:10pt;page-break-after:avoid}.record .record{border-left:1px solid #ddd;padding-left:12px;margin:5px 0}.answer{white-space:normal;overflow-wrap:anywhere;word-wrap:break-word;margin:3px 0 9px}.empty{color:#62636c;font-style:italic;margin:3px 0 9px}@page{margin:16mm 14mm 20mm}@media print{.inkfire-brief{padding:0}.brief-tools{display:none}}'; }

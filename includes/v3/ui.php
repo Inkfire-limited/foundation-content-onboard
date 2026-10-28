@@ -51,8 +51,12 @@ final class FCO_Hub_UI {
         wp_enqueue_script('fco-review-fixes',self::asset_url('assets/v3/review-fixes.js'),['fco-editor-accessibility'],FCO_VERSION,true);
         wp_enqueue_style('fco-review-fixes-css',self::asset_url('assets/v3/review-fixes.css'),['fco-accessibility-css'],FCO_VERSION);
         wp_enqueue_script('fco-guided',self::asset_url('assets/v3/guided.js'),['fco-review-fixes'],FCO_VERSION,true);
+        if ($admin) {
+            wp_enqueue_style('fco-developer-review-css',self::asset_url('assets/v3/developer-review.css'),['fco-review-fixes-css','fco-email-history-css'],FCO_VERSION);
+            wp_enqueue_script('fco-developer-review',self::asset_url('assets/v3/developer-review.js'),['fco-guided'],FCO_VERSION,true);
+        }
         if (!$admin) { wp_enqueue_script('fco-controls',self::asset_url('assets/v3/controls.js'),['fco-guided'],FCO_VERSION,true); }
-        wp_enqueue_script($admin?'fco-hub-admin':'fco-hub-portal',self::asset_url('assets/v3/'.($admin?'admin':($preview_id?'project-preview':'portal')).'.js'),[$admin?'fco-guided':'fco-controls'],FCO_VERSION,true);
+        wp_enqueue_script($admin?'fco-hub-admin':'fco-hub-portal',self::asset_url('assets/v3/'.($admin?'admin':($preview_id?'project-preview':'portal')).'.js'),[$admin?'fco-developer-review':'fco-controls'],FCO_VERSION,true);
         if (!$admin && !$preview_id && current_user_can('manage_options')) { wp_enqueue_script('fco-admin-preview',self::asset_url('assets/v3/preview.js'),['fco-hub-portal'],FCO_VERSION,true); }
     }
     public static function admin_assets($hook) { if (($_GET['page'] ?? '')==='fco-onboarding') { self::assets(true); } }

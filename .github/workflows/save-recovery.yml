@@ -16,6 +16,7 @@ jobs:
           cache: npm
       - run: npm ci --ignore-scripts
       - run: npm test
+      - run: php tests/brief-renderer.test.php
       - name: Check browser scripts
         run: find assets -name '*.js' -print0 | xargs -0 -n1 node --check
       - name: Check plugin PHP
