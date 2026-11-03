@@ -4,7 +4,7 @@ Tags: onboarding, content, client portal, editorial workflow
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 3.0.7
+Stable tag: 3.0.8
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -21,6 +21,11 @@ Foundation: Content Onboard helps teams collect and manage client content throug
 3. Open the Foundation content onboarding tools in wp-admin.
 
 == Changelog ==
+
+= 3.0.8 =
+* Use available desktop review space with two-column answers and a wider branding overview.
+* Replace the revisit disclosure with explicit Skipped and Not answered labels.
+* Follow system light and dark mode throughout the answer review and its surrounding controls.
 
 = 3.0.7 =
 * Rebuilt the answer review as a left-aligned document with visual brand assets, labelled colour swatches, typography and compact unanswered sections.

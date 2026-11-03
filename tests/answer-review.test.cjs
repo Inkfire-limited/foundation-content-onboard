@@ -30,13 +30,13 @@ test('rejects injected swatch CSS, unsafe links and external image loads while r
  const {html}=render(d,[{id:'logos',title:'Assets'},{id:'brand_colours',title:'Colours'},{id:'typography',title:'Fonts'}]);
  assert.doesNotMatch(html,/<img|<script|style="background-color:|href="javascript:|src="https:\/\/external/);assert.match(html,/&lt;script&gt;/);assert.match(html,/Check colour value/);assert.match(html,/#fff;background:url/);assert.doesNotMatch(html,/href="https:\/\/inkfire.co.uk\/onboarding/);
 });
-test('keeps false, zero, multiline answers and skipped saved answers visible; folds only empty sections',()=>{
+test('keeps false, zero, multiline answers and skipped saved answers visible; separates empty sections from skipped saved answers',()=>{
  const d=fixture();d.project.extra_question_answers={first:false,second:0,third:'First line\nSecond line',fourth:''};d.project.skipped_steps=['q3'];
  const steps=['first','second','third','fourth'].map((id,i)=>({id:'q'+(i+1),title:'Question '+(i+1),type:'extra_question',question:{id}}));
  const {html}=render(d,steps);
  assert.match(html,/>No<\/span>/);assert.match(html,/>0<\/span>/);assert.match(html,/First line\nSecond line/);
- assert.match(html,/Marked for later; saved answers are shown below/);assert.match(html,/2 sections to revisit/);assert.match(html,/1 have no saved answer/);
- assert.equal((html.match(/<section class="fco-guided-card">/g)||[]).length,3);assert.match(html,/Question 4<small>No saved answer yet/);
+ assert.match(html,/Skipped for now; saved answers are retained below/);assert.match(html,/Unanswered sections \(1\)/);assert.doesNotMatch(html,/<details|sections to revisit/);
+ assert.equal((html.match(/<section class="fco-guided-card">/g)||[]).length,3);assert.match(html,/Question 4<\/strong><span[^>]*>Not answered/);
 });
 test('retains nested record labels, escapes answers, and links valid saved URLs',()=>{
  const d=fixture();d.branding.socials=[{platform:'Research & news',url:'https://example.com/?a=1&b=2'}];d.branding.contact={address:'<b>Not markup</b>',phones:['01234','05678']};
@@ -46,4 +46,15 @@ test('retains nested record labels, escapes answers, and links valid saved URLs'
 test('client review still offers the existing explicit submission action; admin review does not',()=>{
  const d=fixture();assert.match(render(d,[],{previewOnly:false,isAdmin:false}).html,/id="fco-review-submit"/);
  assert.doesNotMatch(render(d,[],{previewOnly:false,isAdmin:true}).html,/id="fco-review-submit"/);
+});
+
+test('labels only explicitly skipped sections as Skipped, including ones with saved content',()=>{
+ const d=fixture();d.project.skipped_steps=['q1','q2'];d.project.extra_question_answers={one:'Keep this answer',two:'',three:''};
+ const steps=['one','two','three'].map((id,i)=>({id:'q'+(i+1),title:'Question '+(i+1),type:'extra_question',question:{id}}));
+ const {html}=render(d,steps),unanswered=html.slice(html.indexOf('aria-labelledby="fco-unanswered-title"'));
+ assert.equal((html.match(/class="fco-review-status is-skipped"/g)||[]).length,2);
+ assert.equal((html.match(/class="fco-review-status is-empty"/g)||[]).length,1);
+ assert.match(html,/Keep this answer/);assert.match(html,/Unanswered sections \(2\)/);
+ assert.doesNotMatch(unanswered,/Keep this answer|Question 1<\/strong>/);assert.match(unanswered,/Question 2<\/strong><span[^>]*>Skipped/);
+ assert.match(unanswered,/Question 3<\/strong><span[^>]*>Not answered/);assert.doesNotMatch(html,/<details|<summary/);
 });
