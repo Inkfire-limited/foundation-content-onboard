@@ -209,3 +209,22 @@
 :is(.fco-standalone,.fco-hub-admin) #fco-client-app .fco-add-strip {min-width:0;min-height:80px;width:100%}
 :is(.fco-standalone,.fco-hub-admin) #fco-client-app :is(#wiz-mediagrid,#dash-mediagrid) .fco-media-item>img {background-color:#77818b;background-image:conic-gradient(#dbe1e8 25%,transparent 0 50%,#dbe1e8 0 75%,transparent 0);background-size:24px 24px}
 @media(max-width:780px){:is(.fco-standalone,.fco-hub-admin) #fco-client-app .fco-node-actions .fco-mini {width:44px;height:44px;min-width:44px}}
+
+/* The dock stays a direct child of the project so existing save controls keep working. */
+.fco-standalone #fco-portal-project>.fco-project-strip {
+ position:sticky;top:0;z-index:400;width:90%;margin:0 auto 24px;padding:12px 16px;
+ align-items:center;justify-content:space-between;gap:12px 20px;border:1px solid #ffffff30;
+ border-radius:0 0 16px 16px;background:#1a1c29;box-shadow:0 8px 24px #0003;
+}
+.fco-standalone .fco-review-jump {display:grid;gap:4px;flex:0 1 260px;min-width:0;font-size:13px;font-weight:650;line-height:1.4}
+.fco-standalone .fco-review-jump select {width:100%;min-width:0;min-height:44px;padding:9px 12px;border:1px solid #90a3b8;border-radius:10px;background:#17212f;color:#eef3fa;font-size:16px;line-height:1.4}
+.fco-standalone .fco-review-jump select:focus-visible {outline:3px solid var(--review-focus);outline-offset:3px}
+.fco-standalone:has(#fco-client-app[data-wizard-step="outro"]) #fco-portal-project>.fco-project-strip {background:var(--review-surface);color:var(--review-ink);border-color:var(--review-line)}
+.fco-standalone:has(#fco-client-app[data-wizard-step="outro"]) .fco-review-jump select {background:var(--review-raised);color:var(--review-ink);border-color:var(--review-control-line)}
+html:has(body.fco-standalone .fco-project-strip) {scroll-padding-top:calc(var(--fco-workspace-height,110px) + 16px)}
+.fco-standalone .fco-answer-review :is([id^="fco-review-anchor-"],#fco-review-top) {scroll-margin-top:16px}
+@media(max-width:767px){
+ .fco-standalone #fco-portal-project>.fco-project-strip {width:100%;padding:10px 14px;gap:10px;border-radius:0;margin-bottom:16px}
+ .fco-standalone .fco-review-jump {flex:1 1 100%;grid-template-columns:auto minmax(0,1fr);align-items:center;gap:12px}
+ .fco-standalone .fco-review-jump>span {max-width:9ch}
+}
