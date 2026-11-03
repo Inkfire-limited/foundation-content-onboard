@@ -25,13 +25,39 @@ function flush(key){
 A.flushPendingInputs=function(){for(const [key,item] of pending){if(!item.input.isConnected||item.project!==C.projectId)pending.delete(key);else flush(key);}};
 
 const labels={company_name:'Organisation',tagline:'Tagline',one_liner:'What you do',address:'Address',emails:'Email addresses',phones:'Phone numbers',platform:'Platform',url:'Link',name:'Name',label:'Use',hex:'Colour',pantone:'Pantone reference',username:'Username',email:'Email',first_name:'First name',last_name:'Last name',role:'Requested role',position:'Role',bio:'Biography',service:'Service',outcome:'What it should do',caption:'Image notes',client_purpose:'Suggested use'};
-const plain=html=>{const doc=new DOMParser().parseFromString(String(html||''),'text/html');return doc.body.textContent.trim();};
+// Values stay escaped; colour and URL validation also cover attribute contexts.
+const safeURL=(value,image=false)=>{
+ if(!String(value||'').trim())return '';
+ try{const u=new URL(String(value),window.location.href);return /^https?:$/.test(u.protocol)&&!u.username&&!u.password&&(!image||u.origin===window.location.origin)?u.href:'';}catch(_){return '';}
+};
+const plain=html=>{const doc=new DOMParser().parseFromString(String(html||'').replace(/<br\s*\/?>/gi,'\n').replace(/<\/(?:p|div|li|h[1-6])>/gi,'\n'),'text/html');return doc.body.textContent.trim();};
+const fieldHTML=(label,html)=>html?`<div class="fco-review-field"><dt>${esc(label)}</dt><dd>${html}</dd></div>`:'';
 const valueHTML=value=>{
- if(value===true)return 'Yes';if(value===false)return 'No';
+ if(value===true)return '<span class="fco-review-text">Yes</span>';if(value===false)return '<span class="fco-review-text">No</span>';
  if(value==null||value==='')return '';
- if(Array.isArray(value))return value.map(valueHTML).filter(Boolean).map(v=>`<li>${v}</li>`).join('') ? `<ul>${value.map(valueHTML).filter(Boolean).map(v=>`<li>${v}</li>`).join('')}</ul>`:'';
- if(typeof value==='object')return Object.entries(value).filter(([key])=>!['id','sort','parent','image','type','mime','size','created_at','send_to_build','purpose','uuid','project_id'].includes(key)).map(([key,v])=>{const out=valueHTML(v);return out?`<div><strong>${esc(labels[key]||key.replace(/_/g,' '))}:</strong> ${out}</div>`:'';}).join('');
- return esc(String(value));
+ if(Array.isArray(value)){
+  const items=value.map(v=>({html:valueHTML(v),record:v&&typeof v==='object'})).filter(v=>v.html);
+  return items.length?`<ul class="${items.some(v=>v.record)?'fco-review-records':'fco-review-list'}">${items.map(v=>`<li>${v.html}</li>`).join('')}</ul>`:'';
+ }
+ if(typeof value==='object'){
+  const fields=Object.entries(value).filter(([key])=>!['id','sort','parent','image','type','mime','size','created_at','send_to_build','purpose','uuid','project_id','checksum'].includes(key)).map(([key,v])=>fieldHTML(labels[key]||key.replace(/_/g,' '),valueHTML(v))).join('');
+  return fields?`<dl class="fco-review-fields">${fields}</dl>`:'';
+ }
+ const text=String(value),url=/^https?:\/\//i.test(text)?safeURL(text):'';
+ return url?`<a class="fco-review-text" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(text)}</a>`:`<span class="fco-review-text">${esc(text)}</span>`;
+};
+const colourHTML=c=>{
+ const hex=String(c.hex||'').trim(),valid=/^#(?:[a-f0-9]{3}|[a-f0-9]{6}|[a-f0-9]{8})$/i.test(hex);
+ return `<li class="fco-review-colour"><span class="fco-review-swatch${valid?'':' is-unset'}" ${valid?`style="background-color:${hex}"`:''} aria-hidden="true"></span><div><strong>${esc(c.name||'Brand colour')}</strong><code>${esc(hex||'Colour not specified')}</code>${!valid&&hex?'<span>Check colour value</span>':''}${c.pantone?`<span>Pantone: ${esc(c.pantone)}</span>`:''}</div></li>`;
+};
+const assetHTML=a=>{
+ const url=safeURL(a.url),imageURL=safeURL(a.url,true),image=imageURL&&a.type==='image'&&a.mime!=='image/svg+xml';
+ const name=a.filename||a.name||'Brand file',purpose={logo:'Main logo',site_icon:'Icon / favicon',brand_image:'Brand reference',document:'Brand guidelines'}[a.client_purpose]||a.client_purpose||'Inkfire to advise';
+ return `<li class="fco-review-asset">${image?`<div class="fco-review-image"><img src="${esc(imageURL)}" alt="${esc(a.alt||name)}" loading="lazy"></div>`:'<div class="fco-review-file">Brand file</div>'}<div class="fco-review-asset-caption"><strong>${esc(name)}</strong><span>Suggested use: ${esc(purpose)}</span>${a.caption?`<span class="fco-review-text">${esc(a.caption)}</span>`:''}${url?`<a href="${esc(url)}" target="_blank" rel="noopener noreferrer" aria-label="Open original: ${esc(name)}">Open original</a>`:''}</div></li>`;
+};
+const fontsHTML=fonts=>{
+ const rows=(fonts||[]).filter(f=>f.name||f.url).map(f=>fieldHTML(A.fontRoleLabel?.(f)||f.label||'Font',valueHTML(f.name||'Uploaded font')+(f.url?`<div>${valueHTML(f.url)}</div>`:''))).join('');
+ return rows?`<dl class="fco-review-fields fco-review-fonts">${rows}</dl>`:'';
 };
 A.renderAnswerReview=function($input,steps,goTo){
  const p=A.data.project,b=A.data.branding,d=A.data;
@@ -39,30 +65,35 @@ A.renderAnswerReview=function($input,steps,goTo){
  const get=target=>target?.split('.').reduce((v,k)=>v?.[k],d);
  function answer(s){
   if(s.type==='extra_question')return valueHTML(p.extra_question_answers?.[s.question?.id]);
-  if(s.type==='grouped_fields')return s.fields.map(f=>{const value=valueHTML(get(f.target));return value?`<div><strong>${esc(f.label)}:</strong> ${value}</div>`:'';}).join('');
-  if(s.type==='setup_fields')return s.fields.map(([key,label])=>p[key]?`<div><strong>${esc(label)}:</strong> ${valueHTML(p[key])}</div>`:'').join('');
+  if(s.type==='grouped_fields'){const fields=s.fields.map(f=>fieldHTML(f.label,valueHTML(get(f.target)))).join('');return fields?`<dl class="fco-review-fields">${fields}</dl>`:'';}
+  if(s.type==='setup_fields'){const fields=s.fields.map(([key,label])=>fieldHTML(label,valueHTML(p[key]))).join('');return fields?`<dl class="fco-review-fields">${fields}</dl>`:'';}
   if(s.id==='blog_toggle')return valueHTML(p.has_blog)+(p.has_blog?valueHTML(b.blog_categories):'');
   if(s.id==='shop_toggle')return valueHTML(p.has_shop)+(p.has_shop?valueHTML(b.shop_categories):'');
   if(s.id==='features')return valueHTML((p.features||[]).map(k=>A.featureCatalogue?.find(x=>x[0]===k)?.[1]||k));
   if(s.id==='specialist_features')return valueHTML(Object.fromEntries((p.features||[]).filter(k=>p.feature_details?.[k]).map(k=>[A.featureCatalogue?.find(x=>x[0]===k)?.[1]||k,p.feature_details[k]])))+valueHTML(p.specialist_features);
-  if(s.id==='integrations')return (p.integration_choices||[]).map(k=>`<div><strong>${esc(A.connectionCatalogue?.find(x=>x[0]===k)?.[1]||k)}</strong>${valueHTML(p.integration_details?.[k])}</div>`).join('')+valueHTML(p.integrations);
+  if(s.id==='integrations')return (p.integration_choices||[]).map(k=>`<div class="fco-review-record"><h3>${esc(A.connectionCatalogue?.find(x=>x[0]===k)?.[1]||k)}</h3>${valueHTML(p.integration_details?.[k])}</div>`).join('')+valueHTML(p.integrations);
   if(s.id==='contact_info')return valueHTML(b.contact);
   if(s.id==='socials')return valueHTML(b.socials);
   if(s.id==='staff_roster')return valueHTML(d.content.staff);
   if(s.id==='wp_users')return valueHTML(p.wp_users);
-  if(s.id==='typography')return valueHTML((b.fonts||[]).filter(font=>font.name||font.url));
-  if(s.id==='logos')return valueHTML((b.assets||[]).map(a=>({name:a.filename||a.name||'Brand file',client_purpose:a.client_purpose||'Inkfire to advise'})));
-  if(s.id==='brand_colours')return (b.colours_by_inkfire?'Inkfire to choose. ':d._provenance?.defaults?.brand_colors?'Suggested starting colours — please confirm. ':'')+valueHTML(b.colors)+valueHTML(b.colour_palette_url);
-  if(s.id==='inspiration')return valueHTML(b.inspiration_links)+valueHTML(b.brand_doc?.filename)+valueHTML(b.style_notes);
+  if(s.id==='typography')return fontsHTML(b.fonts);
+  if(s.id==='logos')return (b.assets||[]).length?`<ul class="fco-review-assets">${b.assets.map(assetHTML).join('')}</ul>`:'';
+  if(s.id==='brand_colours')return (b.colours_by_inkfire?'<p>Inkfire to choose the brand colours.</p>':d._provenance?.defaults?.brand_colors?'<p>Suggested starting colours — please confirm.</p>':'')+((b.colors||[]).length?`<ul class="fco-review-colours">${b.colors.map(colourHTML).join('')}</ul>`:'')+valueHTML(b.colour_palette_url);
+  if(s.id==='inspiration')return valueHTML(b.inspiration_links)+valueHTML(b.brand_doc?{name:b.brand_doc.filename,url:b.brand_doc.url}:null)+valueHTML(b.style_notes);
   if(s.id==='pages')return valueHTML(d.pages.map(page=>page.title));
   if(s.type==='rich_wizard'){const page=d.drafts[s.pageId]||{};return valueHTML(plain(d.drafts[s.pageId+'::main']?.content))+valueHTML(page.images?.map((img,i)=>({name:img.filename||`Image ${i+1}`,caption:img.caption||''})));}
   return valueHTML(get(s.target));
  }
  const rows=visible.map(s=>({s,html:answer(s)}));
  const missing=rows.filter(x=>!x.html||p.skipped_steps?.includes(x.s.id));
- $input.html(`<div class="fco-review-panel fco-answer-review"><p>Check your answers below. Everything is optional; you can submit now and return later. Selecting a feature does not approve extra work.</p>${missing.length?`<details class="fco-guided-card"><summary>${missing.length} sections to revisit (optional)</summary><div class="fco-review-links">${missing.map(({s})=>`<button type="button" class="fco-btn ghost small" data-review-step="${esc(s.id)}">${esc(s.title)}</button>`).join('')}</div></details>`:''}${rows.map(({s,html})=>`<section class="fco-guided-card"><div class="fco-review-heading"><h2>${esc(s.title)}</h2><button type="button" class="fco-btn ghost small" data-review-step="${esc(s.id)}" aria-label="Edit ${esc(s.title)}">Edit</button></div>${p.skipped_steps?.includes(s.id)?'<p class="fco-small">Marked for later; any saved answers are shown below.</p>':''}<div class="fco-review-answer">${html||'<p>No answer yet — that is fine.</p>'}</div></section>`).join('')}<section class="fco-guided-card"><h2>Ready for Inkfire to review?</h2><p>Submit your saved answers when you are ready. This does not publish your website or send files to the build.</p>${!C.isAdmin&&!C.previewOnly?'<button type="button" class="fco-btn primary" id="fco-review-submit">Submit for Inkfire review</button><p class="fco-review-submitted" role="status"></p>':''}</section></div>`);
- $input.on('click','[data-review-step]',e=>goTo(e.currentTarget.dataset.reviewStep));
- $input.on('click','#fco-review-submit',()=>document.getElementById('fco-submit-project')?.click());
+ const brandIDs=['logos','brand_colours','typography'],brandRows=rows.filter(x=>brandIDs.includes(x.s.id));
+ const edit=s=>`<button type="button" class="fco-btn ghost small" data-review-step="${esc(s.id)}" aria-label="${C.previewOnly?'View':'Edit'} ${esc(s.title)}">${C.previewOnly?'View section':'Edit'}</button>`;
+ const card=({s,html})=>`<section class="fco-guided-card"><div class="fco-review-heading"><h2>${esc(s.title)}</h2>${edit(s)}</div>${p.skipped_steps?.includes(s.id)?'<p class="fco-review-note">Marked for later; saved answers are shown below.</p>':''}<div class="fco-review-answer">${html}</div></section>`;
+ const branding=brandRows.some(x=>x.html)?`<section class="fco-guided-card fco-review-brand"><header><p class="fco-review-eyebrow">Brand overview</p><h2>${esc(b.company_name||'Your brand')}</h2>${b.tagline?`<p>${esc(b.tagline)}</p>`:''}</header>${brandRows.map(({s,html})=>`<section class="fco-review-brand-section"><div class="fco-review-heading"><h3>${esc(s.title)}</h3>${edit(s)}</div>${p.skipped_steps?.includes(s.id)?'<p class="fco-review-note">Marked for later; saved answers are shown below.</p>':''}<div class="fco-review-answer">${html||'<p>No saved selection yet.</p>'}</div></section>`).join('')}<p class="fco-review-note">These are saved brand references. File use and delivery approval are managed separately.</p></section>`:'';
+ const empty=rows.filter(x=>!x.html);
+ $input.html(`<div class="fco-review-panel fco-answer-review"><p class="fco-review-introduction">${C.previewOnly?'Read the saved answers and brand references below. This preview cannot save changes.':'Check your answers below. Everything is optional; you can submit now and return later. Selecting a feature does not approve extra work.'}</p>${branding}${rows.filter(x=>x.html&&!brandIDs.includes(x.s.id)).map(card).join('')}${missing.length?`<details class="fco-guided-card fco-review-unanswered"><summary>${missing.length} sections to revisit (optional)</summary><p>${empty.length} have no saved answer. Sections marked for later may still contain saved answers, shown above.</p><div class="fco-review-links">${missing.map(({s,html})=>`<div class="fco-review-missing-row"><span>${esc(s.title)}<small>${html?'Marked for later · saved answers shown above':'No saved answer yet'}</small></span>${edit(s)}</div>`).join('')}</div></details>`:''}${!C.previewOnly?`<section class="fco-guided-card"><h2>Ready for Inkfire to review?</h2><p>Submit your saved answers when you are ready. This does not publish your website or send files to the build.</p>${!C.isAdmin?'<button type="button" class="fco-btn primary" id="fco-review-submit">Submit for Inkfire review</button><p class="fco-review-submitted" role="status"></p>':''}</section>`:''}</div>`);
+ $input.off('click.fcoAnswerReview').on('click.fcoAnswerReview','[data-review-step]',e=>goTo(e.currentTarget.dataset.reviewStep));
+ $input.on('click.fcoAnswerReview','#fco-review-submit',()=>document.getElementById('fco-submit-project')?.click());
 };
 
 const originalAssets=A.renderAssetManager;
