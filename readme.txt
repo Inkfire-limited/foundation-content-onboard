@@ -4,7 +4,7 @@ Tags: onboarding, content, client portal, editorial workflow
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 3.0.8
+Stable tag: 3.0.9
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -21,6 +21,11 @@ Foundation: Content Onboard helps teams collect and manage client content throug
 3. Open the Foundation content onboarding tools in wp-admin.
 
 == Changelog ==
+
+= 3.0.9 =
+* Keep the workspace/save bar above the form as a sticky header.
+* Add labelled review-section navigation with keyboard focus and measured sticky-header offsets.
+* Compact staff preview actions into a Workspace menu on smaller screens; retain invitation URL fragments and read-only guards.
 
 = 3.0.8 =
 * Use available desktop review space with two-column answers and a wider branding overview.

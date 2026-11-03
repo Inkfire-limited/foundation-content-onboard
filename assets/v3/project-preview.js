@@ -37,10 +37,12 @@ $(async function(){
   A.apiGet=()=>B.jq(Promise.resolve(JSON.parse(JSON.stringify(saved.data))));
   const strip=document.querySelector('.fco-project-strip');
   strip.classList.add('fco-saved-preview-strip');
-  strip.innerHTML='<div><strong id="fco-saved-preview-title"></strong><span class="fco-hub-save" role="status"></span></div><div class="fco-saved-preview-actions"><button type="button" data-preview-mode="start">Welcome</button><button type="button" data-preview-mode="wizard">Questions</button><button type="button" data-preview-mode="editor">Content dashboard</button><a id="fco-preview-back">Back to project</a></div>';
+  strip.innerHTML='<div class="fco-saved-preview-identity"><strong id="fco-saved-preview-title"></strong><span class="fco-hub-save" role="status"></span></div><details class="fco-workspace-menu"><summary>Workspace</summary><div class="fco-saved-preview-actions"><button type="button" data-preview-mode="start">Welcome</button><button type="button" data-preview-mode="wizard">Questions</button><button type="button" data-preview-mode="editor">Content dashboard</button><a id="fco-preview-back">Back to project</a></div></details>';
   document.getElementById('fco-saved-preview-title').textContent=(saved.context.client_name||'Project')+' · Saved revision '+saved.revision;
   const back=document.getElementById('fco-preview-back');back.href=C.adminUrl+'&project='+C.projectId;
-  strip.querySelectorAll('[data-preview-mode]').forEach(button=>button.addEventListener('click',()=>A.switchMode(button.dataset.previewMode)));
+  const compact=window.matchMedia('(max-width:1199px)'),menu=strip.querySelector('.fco-workspace-menu');
+  const sizeMenu=()=>{menu.open=!compact.matches;};sizeMenu();compact.addEventListener('change',sizeMenu);
+  strip.querySelectorAll('[data-preview-mode]').forEach(button=>button.addEventListener('click',()=>{A.switchMode(button.dataset.previewMode);if(compact.matches)menu.open=false;}));
   document.getElementById('fco-gateway').hidden=true;document.getElementById('fco-portal-project').hidden=false;
   await A.init();B.state();
  }catch(error){state.textContent=error.message;document.getElementById('fco-gateway').hidden=false;document.getElementById('fco-opening')?.setAttribute('hidden','');}

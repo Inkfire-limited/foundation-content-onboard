@@ -59,6 +59,43 @@ const fontsHTML=fonts=>{
  const rows=(fonts||[]).filter(f=>f.name||f.url).map(f=>fieldHTML(A.fontRoleLabel?.(f)||f.label||'Font',valueHTML(f.name||'Uploaded font')+(f.url?`<div>${valueHTML(f.url)}</div>`:''))).join('');
  return rows?`<dl class="fco-review-fields fco-review-fonts">${rows}</dl>`:'';
 };
+// Keep workspace actions visible without changing save/submission ownership.
+let reviewDockObserver;
+function syncReviewNavigation(){
+ if(C.isAdmin||!document.body?.classList.contains('fco-standalone'))return;
+ const app=document.getElementById('fco-client-app'),dock=document.querySelector('#fco-portal-project > .fco-project-strip');
+ if(!app||!dock)return;
+ if(dock.nextElementSibling!==app)app.before(dock);
+ if(!reviewDockObserver&&window.ResizeObserver){
+  reviewDockObserver=new ResizeObserver(()=>document.documentElement.style.setProperty('--fco-workspace-height',Math.ceil(dock.getBoundingClientRect().height)+'px'));
+  reviewDockObserver.observe(dock);
+ }
+ let label=dock.querySelector('.fco-review-jump');
+ if(!label){
+  label=document.createElement('label');label.className='fco-review-jump';label.htmlFor='fco-review-jump';
+  label.innerHTML='<span>Find in this review</span><select id="fco-review-jump" aria-label="Find in this review"><option value="">Jump to section…</option></select>';
+  dock.append(label);
+  label.querySelector('select').addEventListener('change',event=>{
+   const root=app.querySelector('.fco-answer-review'),target=document.getElementById(event.target.value);
+   if(!root||!target||!root.contains(target)&&target!==root)return;
+   // Do not set location.hash: client invitation credentials already use that fragment.
+   target.scrollIntoView({block:'start',behavior:'auto'});
+   const focus=target.querySelector('h2,h3,strong')||target;focus.tabIndex=-1;focus.focus({preventScroll:true});
+  });
+ }
+ const root=app.querySelector('.fco-answer-review');label.hidden=!root;
+ const oldPicker=document.querySelector('.fco-sitebar .fco-step-picker-label');if(oldPicker)oldPicker.hidden=!!root;
+ if(!root)return;
+ const select=label.querySelector('select');select.replaceChildren(new Option('Jump to section…',''));
+ root.id='fco-review-top';select.add(new Option('Top of review',root.id));
+ root.querySelectorAll('.fco-review-brand,.fco-review-brand-section,.fco-review-answer-grid>section,.fco-review-unanswered,.fco-review-missing-row').forEach((section,i)=>{
+  const heading=section.querySelector('h2,h3,strong');if(!heading)return;
+  section.id='fco-review-anchor-'+i;
+  const status=section.querySelector(':scope > .fco-review-heading .fco-review-status,:scope > .fco-review-missing-title .fco-review-status')?.textContent;
+  const title=section.classList.contains('fco-review-brand')?'Brand overview':heading.textContent.trim();
+  select.add(new Option(title+(status?' — '+status:''),section.id));
+ });
+}
 A.renderAnswerReview=function($input,steps,goTo){
  const p=A.data.project,b=A.data.branding,d=A.data;
  const visible=steps.filter(s=>!['outro','brand_summary'].includes(s.id)&&s.type!=='build_page_steps'&&(!s.when||s.when()));
@@ -96,6 +133,7 @@ A.renderAnswerReview=function($input,steps,goTo){
  $input.html(`<div class="fco-review-panel fco-answer-review"><p class="fco-review-introduction">${C.previewOnly?'Read the saved answers and brand references below. This preview cannot save changes.':'Check your answers below. Everything is optional; you can submit now and return later. Selecting a feature does not approve extra work.'}</p>${branding}<div class="fco-review-answer-grid">${rows.filter(x=>x.html&&!brandIDs.includes(x.s.id)).map(card).join('')}</div>${empty.length?`<section class="fco-guided-card fco-review-unanswered" aria-labelledby="fco-unanswered-title"><h2 id="fco-unanswered-title">Unanswered sections (${empty.length})</h2><p>These sections have no saved answer. “Skipped” means someone chose “Skip for now”; “Not answered” means no answer has been entered. Sections with saved answers are shown above, including any marked “Skipped”.</p><div class="fco-review-links">${empty.map(({s})=>`<div class="fco-review-missing-row"><div class="fco-review-missing-title"><strong>${esc(s.title)}</strong>${isSkipped(s)?badge('Skipped','skipped'):badge('Not answered','empty')}</div>${edit(s)}</div>`).join('')}</div></section>`:''}${!C.previewOnly?`<section class="fco-guided-card"><h2>Ready for Inkfire to review?</h2><p>Submit your saved answers when you are ready. This does not publish your website or send files to the build.</p>${!C.isAdmin?'<button type="button" class="fco-btn primary" id="fco-review-submit">Submit for Inkfire review</button><p class="fco-review-submitted" role="status"></p>':''}</section>`:''}</div>`);
  $input.off('click.fcoAnswerReview').on('click.fcoAnswerReview','[data-review-step]',e=>goTo(e.currentTarget.dataset.reviewStep));
  $input.on('click.fcoAnswerReview','#fco-review-submit',()=>document.getElementById('fco-submit-project')?.click());
+ syncReviewNavigation();
 };
 
 const originalAssets=A.renderAssetManager;
@@ -128,13 +166,13 @@ function controls(){
 }
 B.refreshSubmission=controls;
 const state=B.state;B.state=function(value){state.call(B,value);controls();};A.setSaveState=B.state;
-document.addEventListener('fco:steps',()=>{enhancePageImages();controls();});
+document.addEventListener('fco:steps',()=>{enhancePageImages();controls();syncReviewNavigation();});
 // Image lists are redrawn after selecting/removing files.
 $(function(){const app=document.getElementById('fco-client-app');if(app)new MutationObserver(()=>enhancePageImages()).observe(app,{childList:true,subtree:true});
  document.getElementById('fco-resume-wizard')?.addEventListener('click',()=>{if(A.data.project.wizard_complete)A.data.project.wizard_step='outro';A.switchMode('wizard');});
 });
 const renderEditor=A.renderEditor;A.renderEditor=function($el){renderEditor.call(A,$el);if(!C.isAdmin){const button=$('<button>',{type:'button',class:'fco-btn ghost small',text:A.data.project.wizard_complete?'Review answers':'Continue wizard'});button.on('click',()=>{if(A.data.project.wizard_complete)A.data.project.wizard_step='outro';A.switchMode('wizard');});$el.find('.fco-head-right').prepend(button);}};
-const originalSwitch=A.switchMode;A.switchMode=function(mode){originalSwitch.call(A,mode);controls();};
+const originalSwitch=A.switchMode;A.switchMode=function(mode){originalSwitch.call(A,mode);controls();syncReviewNavigation();};
 B.confirmSubmission=()=>new Promise(resolve=>{
  const opener=document.activeElement,dialog=document.createElement('dialog');dialog.className='fco-file-dialog fco-submit-dialog';dialog.setAttribute('aria-labelledby','fco-submit-title');
  dialog.innerHTML='<h2 id="fco-submit-title">Submit for Inkfire review?</h2><p>Your saved answers will be ready for the Inkfire team to review. You can keep editing afterwards. Nothing is published or delivered to your build.</p><div class="fco-dialog-actions"><button type="button" data-confirm-submit>Submit answers</button><button type="button" data-cancel-submit>Keep reviewing</button></div>';

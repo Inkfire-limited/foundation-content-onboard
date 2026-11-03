@@ -4,3 +4,19 @@
 .fco-standalone .fco-saved-preview-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .fco-standalone .fco-saved-preview-actions button,.fco-standalone #fco-preview-back{box-sizing:border-box;min-height:44px;margin:0;padding:10px 14px;display:inline-flex;align-items:center;justify-content:center;font-family:inherit;font-size:15px;font-weight:600;line-height:1.4;border:1px solid #ffffff4f;border-radius:12px;background:#263c38;color:#fff;text-decoration:none}
 @media(max-width:600px){.fco-standalone .fco-saved-preview-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));width:100%}.fco-standalone .fco-saved-preview-actions button,.fco-standalone #fco-preview-back{width:100%;white-space:normal;text-align:center}}
+
+.fco-saved-preview-identity {flex:1 1 240px}
+.fco-workspace-menu {position:relative;flex:0 0 auto;min-width:0}
+.fco-workspace-menu>summary {display:none;cursor:pointer;min-height:44px;padding:10px 14px;line-height:1.4;font-weight:650;border:1px solid #90a3b8;border-radius:12px;background:#17212f;color:#eef3fa}
+@media(max-width:1199px){
+ .fco-workspace-menu>summary {display:list-item;list-style-position:inside}
+ .fco-standalone .fco-workspace-menu>.fco-saved-preview-actions {position:absolute;right:0;top:calc(100% + 8px);width:min(400px,calc(100vw - 28px));max-height:55vh;overflow:auto;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));padding:12px;border:1px solid #90a3b8;border-radius:12px;background:#1a1c29;box-shadow:0 12px 30px #0005}
+ .fco-standalone .fco-workspace-menu .fco-saved-preview-actions button,.fco-standalone .fco-workspace-menu #fco-preview-back {width:100%}
+ .fco-standalone .fco-saved-preview-strip .fco-saved-preview-identity {flex:1 1 200px}
+}
+@media(max-width:767px){
+ .fco-standalone .fco-saved-preview-strip .fco-saved-preview-identity {flex:1 1 0;font-size:14px;line-height:1.4}
+ .fco-standalone .fco-saved-preview-strip .fco-hub-save {font-size:12px;line-height:1.4;margin-top:4px}
+ .fco-workspace-menu>summary {padding:10px;font-size:14px}
+}
+.fco-standalone:has(#fco-client-app[data-wizard-step="outro"]) :is(.fco-workspace-menu>summary,.fco-workspace-menu>.fco-saved-preview-actions) {background:var(--review-raised);color:var(--review-ink);border-color:var(--review-control-line)}
